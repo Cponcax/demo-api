@@ -38,6 +38,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    apipie-rails (0.3.5)
+      json
     arel (6.0.3)
     bcrypt (3.1.10)
     better_errors (2.1.1)
@@ -196,6 +198,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
+  apipie-rails
   better_errors (~> 2.1, >= 2.1.1)
   binding_of_caller (~> 0.7.2)
   database_cleaner (~> 1.5, >= 1.5.1)

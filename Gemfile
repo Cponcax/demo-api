@@ -39,6 +39,8 @@ gem 'active_model_serializers'
 
 gem "responders"
 
+gem 'apipie-rails'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

@@ -2,6 +2,7 @@ require 'restrictions'
 
 Rails.application.routes.draw do
 
+  apipie
   use_doorkeeper do
     # it accepts :authorizations, :tokens, :applications and :authorized_applications
     skip_controllers :authorizations, :applications, :authorized_applications

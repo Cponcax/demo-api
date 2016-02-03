@@ -10,6 +10,7 @@ class V1::UsersController < V1::BaseController
     render json: @users
   end
 
+  api :GET, '/users/me'
   def me
     render json: current_resource_owner
   end
