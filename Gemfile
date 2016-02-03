@@ -35,6 +35,8 @@ gem 'enumerize'
 
 gem 'doorkeeper', '~> 3.1'
 
+gem 'active_model_serializers'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
