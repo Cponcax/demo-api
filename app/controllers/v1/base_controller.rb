@@ -12,4 +12,10 @@ class V1::BaseController < ApplicationController
       def current_resource_owner
         @current_user ||= User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token && doorkeeper_token.scopes.include?('write')
       end
+
+      def_param_group :error do
+        error :code => 401, :desc => "Unauthorized", :meta => {:message => "It should contain a header 'Authorization' and a 'Bearer' token."}
+        error :code => 404, :desc => "Not Found"
+        error :code => 422, :desc => "Unprocessable entity"
+      end
 end
