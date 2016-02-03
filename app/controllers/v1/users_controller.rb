@@ -1,4 +1,5 @@
 class V1::UsersController < V1::BaseController
+  before_action -> { doorkeeper_authorize! :write }, only: :me
   before_action :set_user, only: [:show, :update, :destroy]
 
   # GET /users
@@ -7,6 +8,10 @@ class V1::UsersController < V1::BaseController
     @users = User.all
 
     render json: @users
+  end
+
+  def me
+    render json: current_resource_owner
   end
 
   # GET /users/1

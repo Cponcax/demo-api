@@ -2,10 +2,19 @@ require 'restrictions'
 
 Rails.application.routes.draw do
 
+  use_doorkeeper do
+    # it accepts :authorizations, :tokens, :applications and :authorized_applications
+    skip_controllers :authorizations, :applications, :authorized_applications
+  end
+  
   devise_for :users
   
   scope module: :v1, constraints: Restrictions.new(version: 1, default: true), defaults: { format: 'json'} do
-    resources :users, except: [:new, :edit]
+    resources :users, except: [:new, :edit] do
+      collection do
+        get 'me'
+      end
+    end
   end
   
   # The priority is based upon order of creation: first created -> highest priority.
