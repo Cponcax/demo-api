@@ -211,6 +211,7 @@ DEPENDENCIES
   pry-rails
   rails (= 4.2.5)
   rails-api
+  responders
   rspec-rails (~> 3.4)
   spring
 
