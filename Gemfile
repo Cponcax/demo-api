@@ -27,6 +27,7 @@ group :development, :test do
   gem 'binding_of_caller', '~> 0.7.2'
 end
 
+gem 'figaro'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
