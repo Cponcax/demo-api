@@ -10,6 +10,16 @@ gem 'spring', :group => :development
 
 gem 'pg'
 
+group :development, :test do
+  gem 'rspec-rails', '~> 3.4'
+
+  gem 'guard-rspec', '~> 4.6', '>= 4.6.4'
+
+  gem 'factory_girl', '~> 4.5.0'
+  gem 'factory_girl_rails', '~> 4.5.0'
+
+  gem 'database_cleaner', '~> 1.5', '>= 1.5.1'
+end
 
 
 # To use ActiveModel has_secure_password
