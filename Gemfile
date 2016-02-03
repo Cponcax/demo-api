@@ -11,6 +11,9 @@ gem 'spring', :group => :development
 gem 'pg'
 
 group :development, :test do
+  gem 'pry'
+  gem 'pry-rails'
+
   gem 'rspec-rails', '~> 3.4'
 
   gem 'guard-rspec', '~> 4.6', '>= 4.6.4'
@@ -19,6 +22,9 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.5.0'
 
   gem 'database_cleaner', '~> 1.5', '>= 1.5.1'
+
+  gem 'better_errors', '~> 2.1', '>= 2.1.1'
+  gem 'binding_of_caller', '~> 0.7.2'
 end
 
 
