@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   use_doorkeeper do
     # it accepts :authorizations, :tokens, :applications and :authorized_applications
     skip_controllers :authorizations, :applications, :authorized_applications
+
+    controllers :tokens => 'oauth/tokens'
   end
   
   devise_for :users, :skip => [:sessions]
