@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160203220122) do
+ActiveRecord::Schema.define(version: 20160204154201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "countries", force: :cascade do |t|
+    t.string   "name",       limit: 100, null: false
+    t.integer  "code"
+    t.string   "alpha2",     limit: 2
+    t.string   "alpha3",     limit: 3
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", null: false
@@ -76,12 +85,15 @@ ActiveRecord::Schema.define(version: 20160203220122) do
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
+    t.integer  "country_id"
   end
 
+  add_index "users", ["country_id"], name: "index_users_on_country_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["first_name"], name: "index_users_on_first_name", using: :btree
   add_index "users", ["last_name"], name: "index_users_on_last_name", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", using: :btree
 
+  add_foreign_key "users", "countries"
 end

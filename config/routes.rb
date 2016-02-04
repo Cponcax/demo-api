@@ -18,6 +18,8 @@ Rails.application.routes.draw do
         delete 'me', to: 'users#destroy'
       end
     end
+
+    resources :countries, except: [:new, :edit]
   end
   
   # The priority is based upon order of creation: first created -> highest priority.

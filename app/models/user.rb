@@ -6,6 +6,9 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, #:registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  # country
+  belongs_to :country
+
   validates :first_name, :last_name, :email, presence: true
   validates :password, presence: true,  length: { in: 6..20 }, on: :create
 
