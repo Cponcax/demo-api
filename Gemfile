@@ -41,6 +41,8 @@ gem "responders"
 
 gem 'apipie-rails'
 
+gem 'geoip', '~> 1.6', '>= 1.6.1'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
