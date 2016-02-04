@@ -1,5 +1,5 @@
 class V1::UsersController < V1::BaseController
-  before_action -> { doorkeeper_authorize! :write }, only: :me
+  before_action -> { doorkeeper_authorize! :write }
   before_action :set_user, only: [:show, :update, :destroy]
 
   # GET /users
@@ -15,38 +15,65 @@ class V1::UsersController < V1::BaseController
     render json: current_resource_owner
   end
 
-  # GET /users/1
-  # GET /users/1.json
-  def show
-    render json: @user
+  api :POST, "/users", "Create a user"
+  param_group :error, V1::BaseController
+  param :user, Hash, :desc => "Contains user information.", :required => true do
+    param :username, String, :desc => "Username", :required => true
+    param :first_name, String, :desc => "First name", :required => true
+    param :last_name, String, :desc => "Last name", :required => true
+    param :email, String, :desc => "Email", :required => true
+    param :password, String, :desc => "Password (minimum 6 characters)", :required => true
   end
-
-  # POST /users
-  # POST /users.json
+  formats ['json']
+  example '
+  {
+    "user": {
+      "username":"carol",
+      "first_name":"Carol",
+      "last_name":"X",
+      "email":"carol@gmail.com",
+      "password":"welcome"
+    }
+  }'
   def create
     @user = User.new(user_params)
 
     if @user.save
-      render json: @user, status: :created, location: @user
+      render json: @user, status: :created
     else
       render json: @user.errors, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /users/1
-  # PATCH/PUT /users/1.json
+  api :PUT, "/users/me", "Update a user"
+  param_group :error, V1::BaseController
+  param :user, Hash, :desc => "Contains user information.", :required => true do
+    param :username, String, :desc => "Username"
+    param :first_name, String, :desc => "First name"
+    param :last_name, String, :desc => "Last name"
+    param :email, String, :desc => "Email"
+  end
+  formats ['json']
+  example '
+  {
+    "user": {
+      "username":"carol",
+      "first_name":"Carol",
+      "last_name":"X",
+      "email":"carol@gmail.com"
+    }
+  }'
   def update
-    @user = User.find(params[:id])
-
     if @user.update(user_params)
-      head :no_content
+      render json: @user, status: :ok
     else
       render json: @user.errors, status: :unprocessable_entity
     end
   end
 
-  # DELETE /users/1
-  # DELETE /users/1.json
+  api :DELETE, "/users/me", "Destroy a user"
+  param_group :error, V1::BaseController
+  formats ['json']
   def destroy
     @user.destroy
 
@@ -56,10 +83,10 @@ class V1::UsersController < V1::BaseController
   private
 
     def set_user
-      @user = User.find(params[:id])
+      @user = current_resource_owner
     end
 
     def user_params
-      params[:user]
+      params.require(:user).permit(:username, :first_name, :last_name, :email, :password, :gender, :birth_date, :bio)
     end
 end

@@ -8,12 +8,14 @@ Rails.application.routes.draw do
     skip_controllers :authorizations, :applications, :authorized_applications
   end
   
-  devise_for :users
+  devise_for :users, :skip => [:sessions]
   
   scope module: :v1, constraints: Restrictions.new(version: 1, default: true), defaults: { format: 'json'} do
-    resources :users, except: [:new, :edit] do
+    resources :users, only: [:create] do
       collection do
-        get 'me'
+        get 'me',    to: 'users#me'
+        put 'me',    to: 'users#update'
+        delete 'me', to: 'users#destroy'
       end
     end
   end
