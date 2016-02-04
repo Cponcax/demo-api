@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160204170206) do
+ActiveRecord::Schema.define(version: 20160204225007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -74,6 +74,18 @@ ActiveRecord::Schema.define(version: 20160204170206) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
+  create_table "schedules", force: :cascade do |t|
+    t.date     "start_date"
+    t.date     "end_date"
+    t.string   "name"
+    t.integer  "days"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "channel_id"
+  end
+
+  add_index "schedules", ["channel_id"], name: "index_schedules_on_channel_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "code",                   limit: 8,               null: false
     t.string   "username",               limit: 80
@@ -104,5 +116,6 @@ ActiveRecord::Schema.define(version: 20160204170206) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", using: :btree
 
+  add_foreign_key "schedules", "channels"
   add_foreign_key "users", "countries"
 end
