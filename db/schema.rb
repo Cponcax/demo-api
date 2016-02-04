@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160204154201) do
+ActiveRecord::Schema.define(version: 20160204174214) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,9 +86,11 @@ ActiveRecord::Schema.define(version: 20160204154201) do
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
     t.integer  "country_id"
+    t.datetime "deleted_at"
   end
 
   add_index "users", ["country_id"], name: "index_users_on_country_id", using: :btree
+  add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["first_name"], name: "index_users_on_first_name", using: :btree
   add_index "users", ["last_name"], name: "index_users_on_last_name", using: :btree

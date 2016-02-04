@@ -43,6 +43,7 @@ gem 'apipie-rails'
 
 gem 'geoip', '~> 1.6', '>= 1.6.1'
 
+gem "paranoia", "~> 2.0"
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
