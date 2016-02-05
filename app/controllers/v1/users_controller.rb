@@ -1,6 +1,6 @@
 class V1::UsersController < V1::BaseController
   before_action -> { doorkeeper_authorize! :write }
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:show, :update, :destroy, :update_password]
 
   # GET /users
   # GET /users.json
@@ -80,6 +80,14 @@ class V1::UsersController < V1::BaseController
     head :no_content
   end
 
+  def update_password
+    if @user.update_with_password(password_params)
+      render json: @user, status: :ok
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
     def set_user
@@ -88,5 +96,9 @@ class V1::UsersController < V1::BaseController
 
     def user_params
       params.require(:user).permit(:username, :first_name, :last_name, :email, :password, :gender, :birth_date, :bio)
+    end
+
+    def password_params
+      params.require(:user).permit(:current_password, :password)
     end
 end

@@ -24,9 +24,12 @@ Rails.application.routes.draw do
   scope module: :v1, constraints: Restrictions.new(version: 1, default: true), defaults: { format: 'json'} do
     resources :users, only: [:create] do
       collection do
-        get 'me',    to: 'users#me'
-        put 'me',    to: 'users#update'
-        delete 'me', to: 'users#destroy'
+        get 'me'
+
+        put 'me',          to: 'users#update'
+        delete 'me',       to: 'users#destroy'
+
+        put 'update_password'
       end
     end
 
