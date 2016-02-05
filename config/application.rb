@@ -35,5 +35,11 @@ module EsmitvLiveApi
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    # Allows the use of the _method hack to route POST requests to other verbs.
+    config.middleware.use Rack::MethodOverride
+
+    # Supports the flash mechanism in ActionController.
+    config.middleware.use ActionDispatch::Flash
   end
 end
