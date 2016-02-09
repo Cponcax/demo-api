@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :schedule do
-    start_time "2016-02-04"
+    start "10:20:00"
     name "MyString"
   end
 end

@@ -42,6 +42,6 @@ class V1::SchedulesController < V1::BaseController
     end
 
     def schedule_params
-      params.require(:schedule).permit(:start_time, :name, :days)
+      params.require(:schedule).permit(:start, :name, :days)
     end
 end

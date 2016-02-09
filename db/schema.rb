@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160208202528) do
+ActiveRecord::Schema.define(version: 20160209225031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,11 +36,11 @@ ActiveRecord::Schema.define(version: 20160208202528) do
 
   create_table "events", force: :cascade do |t|
     t.string   "streaming_url"
-    t.date     "date"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.integer  "schedule_id"
     t.integer  "show_id"
+    t.integer  "days"
   end
 
   add_index "events", ["schedule_id"], name: "index_events_on_schedule_id", using: :btree
@@ -91,7 +91,7 @@ ActiveRecord::Schema.define(version: 20160208202528) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "channel_id"
-    t.date     "start_time"
+    t.time     "start"
   end
 
   add_index "schedules", ["channel_id"], name: "index_schedules_on_channel_id", using: :btree

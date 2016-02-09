@@ -21,9 +21,9 @@ Rails.application.routes.draw do
 
     resources :countries, except: [:new, :edit]
 
-    resources :channels do
-      resources :schedules
-    end
+    resources :channels
+    resources :schedules
+
 
     resources :events
     resources :shows, except: [:new, :edit]
