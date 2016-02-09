@@ -42,6 +42,6 @@ class V1::EventsController < V1::ApplicationController
     end
 
     def event_params
-      params.require(:event).permit(:streaming_url, :date)
+      params.require(:event).permit(:streaming_url, :days)
     end
 end
