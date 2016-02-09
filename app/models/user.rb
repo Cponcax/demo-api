@@ -11,6 +11,9 @@ class User < ActiveRecord::Base
   # country
   belongs_to :country
 
+  # access tokens from doorkeeper
+  has_many :access_tokens, class_name: "Doorkeeper::AccessToken", foreign_key: "resource_owner_id"
+
   validates :first_name, :last_name, :email, presence: true
   validates :password, presence: true,  length: { in: 6..20 }, on: :create
 
