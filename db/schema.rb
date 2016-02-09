@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160208193212) do
+ActiveRecord::Schema.define(version: 20160208202528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,9 +40,11 @@ ActiveRecord::Schema.define(version: 20160208193212) do
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.integer  "schedule_id"
+    t.integer  "show_id"
   end
 
   add_index "events", ["schedule_id"], name: "index_events_on_schedule_id", using: :btree
+  add_index "events", ["show_id"], name: "index_events_on_show_id", using: :btree
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", null: false
@@ -94,6 +96,14 @@ ActiveRecord::Schema.define(version: 20160208193212) do
 
   add_index "schedules", ["channel_id"], name: "index_schedules_on_channel_id", using: :btree
 
+  create_table "shows", force: :cascade do |t|
+    t.string   "name"
+    t.string   "logo"
+    t.string   "cover"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "code",                   limit: 8,               null: false
     t.string   "username",               limit: 80
@@ -125,6 +135,7 @@ ActiveRecord::Schema.define(version: 20160208193212) do
   add_index "users", ["username"], name: "index_users_on_username", using: :btree
 
   add_foreign_key "events", "schedules"
+  add_foreign_key "events", "shows"
   add_foreign_key "schedules", "channels"
   add_foreign_key "users", "countries"
 end

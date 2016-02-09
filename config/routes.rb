@@ -2,9 +2,6 @@ require 'restrictions'
 
 Rails.application.routes.draw do
 
-
-
-  
   apipie
   use_doorkeeper do
     # it accepts :authorizations, :tokens, :applications and :authorized_applications
@@ -29,6 +26,7 @@ Rails.application.routes.draw do
     end
 
     resources :events
+    resources :shows, except: [:new, :edit]
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
