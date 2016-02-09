@@ -1,28 +1,37 @@
-== README
+## Configuración inicial
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+1. Descargar los archivos de configuración:
+  * database.yml.tmp
+  * secrets.yml.tmp
+  * secret_token.rb.tmp
+  * application.yml.tmp
 
-Things you may want to cover:
+2. Copar los archivos de configuración al directorio correspondiente
+  * config/__database.yml__
+  * config/__secrets.yml__
+  * config/initializers/__secret_token.rb__
+  * config/__application.yml__
 
-* Ruby version
+3. Instalar el bundle
 
-* System dependencies
+4. Instalar _figaro_:
 
-* Configuration
+	```
+	# NOTA: seleccionar opción para no sobrescribir application.yml
+	figaro install
+	```
 
-* Database creation
+5. Crear usuario de base de datos con permisos suficientes:
 
-* Database initialization
+	```
+	# Login to PostgreSQL
+	psql
 
-* How to run the test suite
+	# Create user
+	CREATE ROLE esmitv_live WITH LOGIN CREATEDB;
+```
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+6. crear/migrar base de datos
 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+__NOTA:__ URI de documentación de la API: _localhost:**puerto**/apipie_
