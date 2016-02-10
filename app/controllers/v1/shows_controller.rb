@@ -1,4 +1,4 @@
-class  V1::ShowsController < V1::ApplicationController
+class  V1::ShowsController < V1::BaseController
   before_action :set_show, only: [:show, :edit, :update, :destroy]
 
   respond_to :html
@@ -34,6 +34,12 @@ class  V1::ShowsController < V1::ApplicationController
   def destroy
     @show.destroy
     render json: @show
+  end
+
+
+  def shows_live
+    @shows = Show.get_show
+    render json: @shows
   end
 
   private

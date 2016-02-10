@@ -27,6 +27,8 @@ Rails.application.routes.draw do
 
     resources :events
     resources :shows, except: [:new, :edit]
+
+    get '/live', to: 'shows#shows_live' 
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
