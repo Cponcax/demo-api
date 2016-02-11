@@ -36,6 +36,7 @@ class V1::ChannelsController < V1::BaseController
     render json: @channel
   end
 
+
   private
     def set_channel
       @channel = Channel.find(params[:id])

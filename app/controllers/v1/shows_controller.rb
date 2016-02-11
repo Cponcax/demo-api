@@ -42,6 +42,7 @@ class  V1::ShowsController < V1::BaseController
     render json: @shows
   end
 
+
   private
     def set_show
       @show = Show.find(params[:id])

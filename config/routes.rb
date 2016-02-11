@@ -21,14 +21,19 @@ Rails.application.routes.draw do
 
     resources :countries, except: [:new, :edit]
 
-    resources :channels
-    resources :schedules
+    resources :channels, except: [:new, :edit] do
+      get 'show_channel', to: 'channels#show_channel'
+    end
+
+    resources :schedules, except: [:new, :edit]
 
 
-    resources :events
+    resources :events, except: [:new, :edit]
+
     resources :shows, except: [:new, :edit]
 
-    get '/live', to: 'shows#shows_live' 
+    get '/live', to: 'shows#shows_live'
+
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
