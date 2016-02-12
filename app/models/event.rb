@@ -1,6 +1,6 @@
 class Event < ActiveRecord::Base
-belongs_to :schedule
-belongs_to :show
+  belongs_to :schedule
+  belongs_to :show
 
 
   def self.day
@@ -17,10 +17,8 @@ belongs_to :show
     Show.where("SELECT name IS  NOT NULL")
   end
 
-
   def self.channel
-    Channel.get_channel
+    Show.where("SELECT name IS  NOT NULL")
   end
-
 
 end

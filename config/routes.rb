@@ -34,6 +34,8 @@ Rails.application.routes.draw do
 
     get '/live', to: 'shows#shows_live'
 
+    get '/channel/:id/show', to: 'channels#channel_show'
+
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

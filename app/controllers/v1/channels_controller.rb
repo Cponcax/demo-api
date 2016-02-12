@@ -36,6 +36,12 @@ class V1::ChannelsController < V1::BaseController
     render json: @channel
   end
 
+  def channel_show
+
+    @channel = Channel.get_arel_show
+
+    render json: @channel
+  end
 
   private
     def set_channel
