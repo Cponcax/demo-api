@@ -9,5 +9,8 @@ class EventSerializer < ActiveModel::Serializer
     object.schedule.channel_id
   end
 
-  
+  def schedule
+    object.schedule.name
+  end
+
 end
