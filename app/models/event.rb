@@ -21,4 +21,5 @@ class Event < ActiveRecord::Base
     Show.where("SELECT name IS  NOT NULL")
   end
 
+
 end

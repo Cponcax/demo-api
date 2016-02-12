@@ -34,7 +34,7 @@ Rails.application.routes.draw do
 
     get '/live', to: 'shows#shows_live'
 
-    get '/channel/:id/show', to: 'channels#channel_show'
+    get '/channel/:id/shows', to: 'channels#channel_show'
 
   end
 

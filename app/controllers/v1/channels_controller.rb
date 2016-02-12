@@ -1,5 +1,5 @@
 class V1::ChannelsController < V1::BaseController
-  before_action :set_channel, only: [:show, :edit, :update, :destroy]
+  before_action :set_channel, only: [:show, :edit, :update, :destroy, :channel_show]
 
   respond_to :html
 
@@ -37,9 +37,7 @@ class V1::ChannelsController < V1::BaseController
   end
 
   def channel_show
-
-    @channel = Channel.get_arel_show
-
+    @channel.get_name
     render json: @channel
   end
 
