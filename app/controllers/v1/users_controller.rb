@@ -1,5 +1,5 @@
 class V1::UsersController < V1::BaseController
-  before_action -> { doorkeeper_authorize! :write }
+  before_action -> { doorkeeper_authorize! :write }, except: :create
   before_action :set_user, only: [:show, :update, :destroy, :update_password]
 
   # GET /users
@@ -80,6 +80,20 @@ class V1::UsersController < V1::BaseController
     head :no_content
   end
 
+  api :PUT, "/users/update_password", "Update user password"
+  param_group :error, V1::BaseController
+  param :user, Hash, :desc => "Contains user information.", :required => true do
+    param :current_password, String, :desc => "Current password"
+    param :password, String, :desc => "New password"
+  end
+  formats ['json']
+  example '
+  {
+    "user": {
+      "current_password": "current_password",
+      "password":"new_password"
+    }
+  }'
   def update_password
     if @user.update_with_password(password_params)
       render json: @user, status: :ok
