@@ -1,15 +1,15 @@
 class V1::RatingsController < V1::BaseController
-  before_action :set_rating, only: [:show, :edit, :update, :destroy]
+  before_action :set_rating, only: [:show]
 
   respond_to :html
 
   def index
     @ratings = Rating.all
-    respond_with(@ratings)
+    render json: @ratings
   end
 
   def show
-    respond_with(@rating)
+    render json: @rating
   end
 
 
