@@ -50,7 +50,7 @@ gem 'sidekiq', '~> 4.0', '>= 4.0.2'
 
 gem 'redis'
 gem 'redis-rails'
-gem 'redis-rack-cache'
+#gem 'redis-rack-cache'
 gem 'redis-namespace'
 
 gem 'mandrill-api', '~> 1.0', '>= 1.0.53'

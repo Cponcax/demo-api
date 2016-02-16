@@ -22,7 +22,6 @@ Rails.application.routes.draw do
     end
   end
 
-
   scope module: :v1, constraints: Restrictions.new(version: 1, default: true), defaults: { format: 'json'} do
     resources :users, only: [:create] do
       collection do
@@ -38,9 +37,8 @@ Rails.application.routes.draw do
     resources :countries, except: [:new, :edit, :create, :delete]
 
     resources :channels, except: [:new, :edit , :create, :delete]
-
+    
     resources :schedules, except: [:new, :edit, :create, :delete]
-
 
     resources :events,  except: [:new, :edit, :create, :delete]
 
@@ -52,6 +50,9 @@ Rails.application.routes.draw do
 
     resources :ratings,  except: [:new, :edit, :create, :delete]
 
+    resources :countries, except: [:new, :edit]
+
+    resources :reminders, only: [:index, :create, :destroy]
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
