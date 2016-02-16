@@ -1,5 +1,5 @@
 class  V1::ShowsController < V1::BaseController
-  before_action :set_show, only: [:show, :edit, :update, :destroy]
+  before_action :set_show, only: [:show]
 
   respond_to :html
 
@@ -12,37 +12,28 @@ class  V1::ShowsController < V1::BaseController
     render json: @show
   end
 
-  def new
-    @show = Show.new
-    render json: @show
-  end
-
-  def edit
-  end
-
-  def create
-    @show = Show.new(show_params)
-    @show.save
-    render json: @show
-  end
-
-  def update
-    @show.update(show_params)
-    render json: @show
-  end
-
-  def destroy
-    @show.destroy
-    render json: @show
-  end
-
-
   def shows_live
     @shows = Show.get_show
     render json: @shows
   end
-
-
+  example'
+  {
+  "shows":[
+        {
+          "id": 1,
+          "name": "grandiosas",
+          "logo": "logograndiosas",
+          "cover": "covergrandiosas"
+        },
+        {
+          "id": 1,
+          "name": "Viva la manana",
+          "logo": "logo viva",
+          "cover": "cover viva"
+        }
+      ]
+    }
+  '
   private
     def set_show
       @show = Show.find(params[:id])

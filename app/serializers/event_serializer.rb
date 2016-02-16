@@ -1,8 +1,12 @@
 class EventSerializer < ActiveModel::Serializer
-  attributes :channel_id,:schedule, :name, :start_time, :end_time, :streaming_url, :date
+  attributes :channel_id,:schedule, :name, :cover ,:start_time, :end_time, :streaming_url, :date
 
   def name
     object.show.name
+  end
+
+  def cover
+    object.show.cover
   end
 
   def channel_id

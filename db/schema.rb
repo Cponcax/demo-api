@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160208194247) do
+ActiveRecord::Schema.define(version: 20160216182036) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 20160208194247) do
     t.integer  "position"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.string   "logo_color"
   end
 
   create_table "countries", force: :cascade do |t|
@@ -88,6 +89,12 @@ ActiveRecord::Schema.define(version: 20160208194247) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
+  create_table "ratings", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "schedules", force: :cascade do |t|
     t.integer  "channel_id"
     t.date     "date"
@@ -104,7 +111,10 @@ ActiveRecord::Schema.define(version: 20160208194247) do
     t.string   "cover"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "rating_id"
   end
+
+  add_index "shows", ["rating_id"], name: "index_shows_on_rating_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "code",                   limit: 8,               null: false
@@ -136,5 +146,6 @@ ActiveRecord::Schema.define(version: 20160208194247) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", using: :btree
 
+  add_foreign_key "shows", "ratings"
   add_foreign_key "users", "countries"
 end

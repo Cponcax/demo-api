@@ -1,7 +1,5 @@
 class ChannelSerializer < ActiveModel::Serializer
-  attributes :id,:name, :logo, :streaming_url, :position
+  attributes :id,:name, :logo, :streaming_url, :position, :logo_color
 
-  # def show_name
-  #   object.show.name
-  # end
+
 end

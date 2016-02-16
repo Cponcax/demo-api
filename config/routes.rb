@@ -2,6 +2,7 @@ require 'restrictions'
 
 Rails.application.routes.draw do
 
+  resources :ratings, except: [:new, :edit]
   apipie
   use_doorkeeper do
     # it accepts :authorizations, :tokens, :applications and :authorized_applications
@@ -21,9 +22,7 @@ Rails.application.routes.draw do
 
     resources :countries, except: [:new, :edit]
 
-    resources :channels, except: [:new, :edit] do
-      get 'show_channel', to: 'channels#show_channel'
-    end
+    resources :channels, except: [:new, :edit]
 
     resources :schedules, except: [:new, :edit]
 
@@ -34,7 +33,7 @@ Rails.application.routes.draw do
 
     get '/live', to: 'shows#shows_live'
 
-    get '/channel/:id/shows', to: 'channels#channel_show'
+    get '/channel/:id/shows', to: 'channels#channel_shows'
 
   end
 

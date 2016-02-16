@@ -1,5 +1,5 @@
 class V1::ChannelsController < V1::BaseController
-  before_action :set_channel, only: [:show, :edit, :update, :destroy, :channel_show]
+  before_action :set_channel, only: [:show, :channel_shows]
 
   respond_to :html
 
@@ -12,35 +12,28 @@ class V1::ChannelsController < V1::BaseController
     render json: @channel
   end
 
-  def new
-    @channel = Channel.new
-    render json: @channel
-  end
 
-  def edit
-  end
 
-  def create
-    @channel = Channel.new(channel_params)
-    @channel.save
-    render json: @channel
+  def channel_shows
+    @channel.give_shows
+    render json: @channel.give_shows, root: "shows"
   end
-
-  def update
-    @channel.update(channel_params)
-    render json: @channel
-  end
-
-  def destroy
-    @channel.destroy
-    render json: @channel
-  end
-
-  def channel_show
-    @channel.get_name
-    render json: @channel
-  end
-
+  example'
+  {
+    "shows":[
+    {
+    "channel_id": 2,
+    "schedule": "tarde",
+    "name": "viva la manana",
+    "cover": "coverviva",
+    "start_time": "2016-02-16T16:10:30.000Z",
+    "end_time": "2016-02-16T18:10:30.000Z",
+    "streaming_url": "streaming event4",
+    "date": "2016-02-16"
+    }
+  ]
+}
+  '
   private
     def set_channel
       @channel = Channel.find(params[:id])

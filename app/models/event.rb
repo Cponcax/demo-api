@@ -13,13 +13,4 @@ class Event < ActiveRecord::Base
     where("? BETWEEN start_time AND end_time", t )
   end
 
-  def self.get_name
-    Show.where("SELECT name IS  NOT NULL")
-  end
-
-  def self.channel
-    Show.where("SELECT name IS  NOT NULL")
-  end
-
-
 end
