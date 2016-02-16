@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
     controllers :tokens => 'oauth/tokens'
   end
-  
+
   devise_for :users, :skip => [:passwords, :sessions]
 
   devise_scope :user do
@@ -37,14 +37,17 @@ Rails.application.routes.draw do
     resources :countries, except: [:new, :edit, :create, :delete]
 
     resources :channels, except: [:new, :edit , :create, :delete]
-    
+
     resources :schedules, except: [:new, :edit, :create, :delete]
 
     resources :events,  except: [:new, :edit, :create, :delete]
 
-    resources :shows,  except: [:new, :edit, :create, :delete]
+    resources :shows,  except: [:new, :edit, :create, :delete] do
+      collection  do
+        get '/live', to: 'shows#shows_live'
+      end
+    end
 
-    get '/live', to: 'shows#shows_live'
 
     get '/channel/:id/shows', to: 'channels#channel_shows'
 
