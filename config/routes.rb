@@ -10,7 +10,6 @@ Rails.application.routes.draw do
 
     controllers :tokens => 'oauth/tokens'
   end
-<<<<<<< HEAD
   
   devise_for :users, :skip => [:passwords, :sessions]
 
@@ -22,12 +21,8 @@ Rails.application.routes.draw do
       put   '/password(.:format)',       to: 'v1/passwords#update'
     end
   end
-  
-=======
 
-  devise_for :users, :skip => [:sessions]
 
->>>>>>> feature/channels
   scope module: :v1, constraints: Restrictions.new(version: 1, default: true), defaults: { format: 'json'} do
     resources :users, only: [:create] do
       collection do
