@@ -18,6 +18,7 @@ class V1::ChannelsController < V1::BaseController
     @channel.give_shows
     render json: @channel.give_shows, root: "shows"
   end
+  formats ['json']
   example'
   {
     "shows":[

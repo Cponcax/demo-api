@@ -16,6 +16,7 @@ class  V1::ShowsController < V1::BaseController
     @shows = Show.get_show
     render json: @shows
   end
+  formats ['json']
   example'
   {
   "shows":[
