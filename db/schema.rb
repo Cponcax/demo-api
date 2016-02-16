@@ -11,10 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20160204174214) do
+=======
+ActiveRecord::Schema.define(version: 20160216182036) do
+>>>>>>> feature/channels
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "channels", force: :cascade do |t|
+    t.string   "name"
+    t.string   "logo"
+    t.string   "streaming_url"
+    t.integer  "position"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.string   "logo_color"
+  end
 
   create_table "countries", force: :cascade do |t|
     t.string   "name",       limit: 100, null: false
@@ -24,6 +38,20 @@ ActiveRecord::Schema.define(version: 20160204174214) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
+
+  create_table "events", force: :cascade do |t|
+    t.integer  "show_id"
+    t.integer  "schedule_id"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.string   "streaming_url"
+    t.date     "date"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "events", ["schedule_id"], name: "index_events_on_schedule_id", using: :btree
+  add_index "events", ["show_id"], name: "index_events_on_show_id", using: :btree
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", null: false
@@ -65,6 +93,33 @@ ActiveRecord::Schema.define(version: 20160204174214) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
+  create_table "ratings", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "schedules", force: :cascade do |t|
+    t.integer  "channel_id"
+    t.date     "date"
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "schedules", ["channel_id"], name: "index_schedules_on_channel_id", using: :btree
+
+  create_table "shows", force: :cascade do |t|
+    t.string   "name"
+    t.string   "logo"
+    t.string   "cover"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "rating_id"
+  end
+
+  add_index "shows", ["rating_id"], name: "index_shows_on_rating_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "code",                   limit: 8,               null: false
     t.string   "username",               limit: 80
@@ -97,5 +152,6 @@ ActiveRecord::Schema.define(version: 20160204174214) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", using: :btree
 
+  add_foreign_key "shows", "ratings"
   add_foreign_key "users", "countries"
 end

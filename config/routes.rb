@@ -2,6 +2,7 @@ require 'restrictions'
 
 Rails.application.routes.draw do
 
+
   apipie
   use_doorkeeper do
     # it accepts :authorizations, :tokens, :applications and :authorized_applications
@@ -9,6 +10,7 @@ Rails.application.routes.draw do
 
     controllers :tokens => 'oauth/tokens'
   end
+<<<<<<< HEAD
   
   devise_for :users, :skip => [:passwords, :sessions]
 
@@ -21,6 +23,11 @@ Rails.application.routes.draw do
     end
   end
   
+=======
+
+  devise_for :users, :skip => [:sessions]
+
+>>>>>>> feature/channels
   scope module: :v1, constraints: Restrictions.new(version: 1, default: true), defaults: { format: 'json'} do
     resources :users, only: [:create] do
       collection do
@@ -33,9 +40,25 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :countries, except: [:new, :edit]
+    resources :countries, except: [:new, :edit, :create, :delete]
+
+    resources :channels, except: [:new, :edit , :create, :delete]
+
+    resources :schedules, except: [:new, :edit, :create, :delete]
+
+
+    resources :events,  except: [:new, :edit, :create, :delete]
+
+    resources :shows,  except: [:new, :edit, :create, :delete]
+
+    get '/live', to: 'shows#shows_live'
+
+    get '/channel/:id/shows', to: 'channels#channel_shows'
+
+    resources :ratings,  except: [:new, :edit, :create, :delete]
+
   end
-  
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
