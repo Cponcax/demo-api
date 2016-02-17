@@ -52,7 +52,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :ratings,   only: [:index, :show ]
 
     resources :countries, except: [:new, :edit]
 
