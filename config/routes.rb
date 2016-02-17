@@ -36,7 +36,7 @@ Rails.application.routes.draw do
 
     resources :countries, only: [:new, :edit, :create, :delete]
 
-    resources :channels, only: [:new, :edit , :create, :delete] do
+    resources :channels, only: [:index, :show ] do
       collection do
           get '/:id/shows', to: 'channels#channel_shows'
       end
