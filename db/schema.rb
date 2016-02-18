@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160216225847) do
+ActiveRecord::Schema.define(version: 20160217212851) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,8 +38,8 @@ ActiveRecord::Schema.define(version: 20160216225847) do
   create_table "events", force: :cascade do |t|
     t.integer  "show_id"
     t.integer  "schedule_id"
-    t.datetime "start_time"
-    t.datetime "end_time"
+    t.time     "start_time"
+    t.time     "end_time"
     t.string   "streaming_url"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
@@ -88,12 +88,6 @@ ActiveRecord::Schema.define(version: 20160216225847) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
-  create_table "ratings", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "reminders", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "channel_id"
@@ -107,17 +101,6 @@ ActiveRecord::Schema.define(version: 20160216225847) do
   add_index "reminders", ["channel_id"], name: "index_reminders_on_channel_id", using: :btree
   add_index "reminders", ["schedule_id"], name: "index_reminders_on_schedule_id", using: :btree
   add_index "reminders", ["user_id"], name: "index_reminders_on_user_id", using: :btree
-
-  create_table "roles", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "resource_id"
-    t.string   "resource_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
-  add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
   create_table "schedules", force: :cascade do |t|
     t.integer  "channel_id"
@@ -136,10 +119,8 @@ ActiveRecord::Schema.define(version: 20160216225847) do
     t.string   "cover"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer  "rating_id"
+    t.string   "rating"
   end
-
-  add_index "shows", ["rating_id"], name: "index_shows_on_rating_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "code",                   limit: 8,               null: false
@@ -164,34 +145,15 @@ ActiveRecord::Schema.define(version: 20160216225847) do
     t.integer  "country_id"
     t.datetime "deleted_at"
     t.string   "status"
-    t.string   "invitation_token"
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
-    t.integer  "invitation_limit"
-    t.integer  "invited_by_id"
-    t.string   "invited_by_type"
-    t.integer  "invitations_count",                 default: 0
   end
 
   add_index "users", ["country_id"], name: "index_users_on_country_id", using: :btree
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["first_name"], name: "index_users_on_first_name", using: :btree
-  add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
-  add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
-  add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
   add_index "users", ["last_name"], name: "index_users_on_last_name", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", using: :btree
 
-  create_table "users_roles", id: false, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "role_id"
-  end
-
-  add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
-
-  add_foreign_key "shows", "ratings"
   add_foreign_key "users", "countries"
 end

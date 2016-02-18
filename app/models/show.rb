@@ -4,7 +4,13 @@ class Show < ActiveRecord::Base
  
 
   def self.get_show
-    Event.hour.day
+    Event.hour #.day
   end
 
+
+ # def self.day
+ #    day = Date.today
+ #    Schedule.where("date = ?", day)
+ #  end
+  
 end

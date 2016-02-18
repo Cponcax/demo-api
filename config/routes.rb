@@ -34,25 +34,24 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :countries, only: [:new, :edit, :create, :delete]
+    resources :countries,  only: [:index, :show ]
 
-    resources :channels, only: [:new, :edit , :create, :delete] do
+    resources :channels, only: [:index, :show ] do
       collection do
           get '/:id/shows', to: 'channels#channel_shows'
       end
     end
 
-    resources :schedules, only: [:new, :edit, :create, :delete]
+    resources :schedules,  only: [:index, :show ]
 
-    resources :events,  only: [:new, :edit, :create, :delete]
+    resources :events,   only: [:index, :show ]
 
-    resources :shows,  only: [:new, :edit, :create, :delete] do
+    resources :shows,   only: [:index, :show ] do
       collection  do
         get '/live', to: 'shows#shows_live'
       end
     end
 
-    resources :ratings,  only: [:new, :edit, :create, :delete]
 
     resources :countries, except: [:new, :edit]
 
