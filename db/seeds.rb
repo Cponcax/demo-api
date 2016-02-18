@@ -5,3 +5,5 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+channel = Channel.create([{name: 'canal cuatro', logo:'logo canalcuatro', streaming_url: 'streaming_url_canalcuatro', position: '4'}])
