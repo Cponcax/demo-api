@@ -1,4 +1,4 @@
-class V1::EventsController < V1::ApplicationController
+class V1::EventsController < V1::BaseController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
   respond_to :html
