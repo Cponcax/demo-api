@@ -24,7 +24,8 @@ class V1::RemindersController < V1::BaseController
       "schedule_id": 1,
       "channel_id": 1,
       "name":"Metrópolis",
-      "url_image":"https://i.ytimg.com/vi/Q0NzALRJifI/maxresdefault.jpg"
+      "url_image":"https://i.ytimg.com/vi/Q0NzALRJifI/maxresdefault.jpg",
+      "start_time": "2016-02-19T19:13:26.000Z"
     }
   }'
   def create
