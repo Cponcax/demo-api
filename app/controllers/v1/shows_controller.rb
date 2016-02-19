@@ -11,11 +11,15 @@ class  V1::ShowsController < V1::BaseController
   def show
     render json: @show
   end
-
-  def shows_live
-    @shows = Show.get_show
-    render json: @shows
-  end
+  api :GET, "/shows/live", "View shows live "
+    param_group :error, V1::BaseController
+    param :shows, Hash, :desc => "Contains show information.", :required => true do
+      param :id, :number, :required => true
+      param :name, String, :desc => "show name" , :required => true
+      param :logo, String, :desc => "logo of the show", :required => true
+      param :cover, String, :desc => "cover of the show", :required => true
+      
+    end
   formats ['json']
   example'
   {
@@ -23,18 +27,18 @@ class  V1::ShowsController < V1::BaseController
         {
           "id": 1,
           "name": "grandiosas",
-          "logo": "logograndiosas",
-          "cover": "covergrandiosas"
-        },
-        {
-          "id": 1,
-          "name": "Viva la manana",
-          "logo": "logo viva",
-          "cover": "cover viva"
+          "logo": "https://i.ytimg.com/vi/Q0NzALRJifI/maxresdefault.jpg",
+          "cover": "https://i.ytimg.com/vi/Q0NzALRJifI/maxresdefault.jpg"
         }
       ]
     }
   '
+  def shows_live
+    @shows = Show.get_show
+    render json: @shows
+  end
+
+ 
   private
     def set_show
       @show = Show.find(params[:id])
