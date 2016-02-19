@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :async,#:registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable #, :validatable
 
   # country
   belongs_to :country
@@ -22,8 +22,8 @@ class User < ActiveRecord::Base
 
   validates :bio, length: { maximum: 255 }
 
-  #validates :email, format: { with: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i, error: :bad_format }, 
-  #                  uniqueness: { case_sensitive: false }
+  validates :email, format: { with: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i, error: :bad_format }, 
+                 uniqueness: { case_sensitive: false }
 
   enumerize :gender, :in => [:male, :female], default: :female, scope: :having_gender
   enumerize :status, in: [:active, :inactive, :banned], default: :active, scope: :having_account_status, predicates: true
