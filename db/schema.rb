@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160217212851) do
+ActiveRecord::Schema.define(version: 20160219190945) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 20160217212851) do
     t.string   "url_image",              default: ""
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.datetime "start_time"
   end
 
   add_index "reminders", ["channel_id"], name: "index_reminders_on_channel_id", using: :btree

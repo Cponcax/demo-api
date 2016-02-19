@@ -52,6 +52,6 @@ class V1::RemindersController < V1::BaseController
     end
 
     def reminder_params
-      params.require(:reminder).permit(:channel_id, :schedule_id, :name, :url_image)
+      params.require(:reminder).permit(:channel_id, :schedule_id, :name, :url_image, :start_time)
     end
 end
