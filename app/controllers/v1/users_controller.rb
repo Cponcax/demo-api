@@ -18,7 +18,7 @@ class V1::UsersController < V1::BaseController
   api :POST, "/users", "Create a user"
   param_group :error, V1::BaseController
   param :user, Hash, :desc => "Contains user information.", :required => true do
-    param :username, String, :desc => "Username", :required => true
+    param :username, String, :desc => "Username", :required => false
     param :first_name, String, :desc => "First name", :required => true
     param :last_name, String, :desc => "Last name", :required => true
     param :email, String, :desc => "Email", :required => true
