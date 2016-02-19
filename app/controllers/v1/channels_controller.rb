@@ -12,6 +12,7 @@ class V1::ChannelsController < V1::BaseController
     render json: @channel
   end
 
+
  api :GET, "/channels/:id/shows", "View shows per channel"
   param_group :error, V1::BaseController
   param :shows, Hash, :desc => "Contains show information.", :required => true do
@@ -35,7 +36,7 @@ class V1::ChannelsController < V1::BaseController
     "cover": "https://i.ytimg.com/vi/Q0NzALRJifI/maxresdefault.jpg",
     "start_time": "2016-02-16T16:10:30.000Z",
     "end_time": "2016-02-16T18:10:30.000Z",
-    "streaming_url": "streaming event4",
+    "streaming_url": "streaming event",
     "date": "2016-02-16"
     }
   ]
