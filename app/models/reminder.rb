@@ -1,6 +1,6 @@
 class Reminder < ActiveRecord::Base
   belongs_to :user
-
+  validates :user, :presence => true
   validates :name, :url_image, presence: true
 
   MAX_VALUE = 2**7 - 1

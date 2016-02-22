@@ -1,7 +1,7 @@
 class Event < ActiveRecord::Base
   belongs_to :schedule
   belongs_to :show
-
+  validates :schedule, :show, :presence => true
 
  validates :show_id, :schedule_id, :start_time, :end_time, :streaming_url ,presence: true
 
