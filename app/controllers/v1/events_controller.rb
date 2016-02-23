@@ -1,8 +1,6 @@
 class V1::EventsController < V1::BaseController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
-  respond_to :html
-
   def index
     @events = Event.all
     render json: @events
@@ -18,6 +16,6 @@ class V1::EventsController < V1::BaseController
     end
 
     def event_params
-      params.require(:event).permit(:streaming_url, :days)
+      params.require(:event).permit(:start_time, :end_time,:streaming_url)
     end
 end

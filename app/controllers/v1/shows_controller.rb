@@ -18,7 +18,7 @@ class  V1::ShowsController < V1::BaseController
       param :name, String, :desc => "show name" , :required => true
       param :logo, String, :desc => "logo of the show", :required => true
       param :cover, String, :desc => "cover of the show", :required => true
-      
+
     end
   formats ['json']
   example'
@@ -38,13 +38,13 @@ class  V1::ShowsController < V1::BaseController
     render json: @shows
   end
 
- 
+
   private
     def set_show
       @show = Show.find(params[:id])
     end
 
     def show_params
-      params.require(:show).permit(:name, :logo, :cover)
+      params.require(:show).permit(:name, :rating)
     end
 end

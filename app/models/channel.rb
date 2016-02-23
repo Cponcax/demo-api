@@ -1,7 +1,7 @@
 class Channel < ActiveRecord::Base
   has_many :schedules
 
-  validates :name, :logo, :streaming_url, :position, :logo_color, presence: true
+  validates :name,  :position, :streaming_url, :logo_color, presence: true
 
   def give_shows
     shows = []

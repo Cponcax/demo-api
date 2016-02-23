@@ -47,13 +47,13 @@ class V1::ChannelsController < V1::BaseController
     render json: @channel.give_shows, root: "shows"
   end
 
- 
+
   private
     def set_channel
       @channel = Channel.find(params[:id])
     end
 
     def channel_params
-      params.require(:channel).permit(:name, :logo, :streaming_url, :position)
+      params.require(:channel).permit(:name, :streaming_url, :position, :logo_color)
     end
 end
