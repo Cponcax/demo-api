@@ -1,5 +1,5 @@
 class ChannelSerializer < ActiveModel::Serializer
-  attributes :id,:name, :start_time, :logo, :streaming_url, :position, :logo_color, :created_at,:updated_at
+  attributes :id,:name, :logo, :streaming_url, :position, :logo_color, :created_at,:updated_at
 
 
 #fields  Serializer only example
