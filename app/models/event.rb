@@ -3,7 +3,7 @@ class Event < ActiveRecord::Base
   belongs_to :show
   validates :schedule, :show, :presence => true
 
- validates :show_id, :schedule_id, :start_time, :end_time, :streaming_url ,presence: true
+ validates :start_time, :end_time, :streaming_url ,presence: true
 
 
   def self.hour

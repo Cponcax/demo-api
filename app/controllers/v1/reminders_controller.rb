@@ -2,7 +2,6 @@ class V1::RemindersController < V1::BaseController
   before_action -> { doorkeeper_authorize! :write }
   before_action :set_reminder, only: [:destroy]
 
-  respond_to :html
 
   def index
     @reminders = current_resource_owner.reminders

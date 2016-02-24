@@ -12,29 +12,6 @@ class V1::SchedulesController < V1::BaseController
     render json: @schedule
   end
 
-  def new
-    @schedule = Schedule.new
-    render json: @schedule
-  end
-
-  def edit
-  end
-
-  def create
-    @schedule = Schedule.new(schedule_params)
-    @schedule.save
-    render json: @schedule
-  end
-
-  def update
-    @schedule.update(schedule_params)
-    render json: @schedule
-  end
-
-  def destroy
-    @schedule.destroy
-    render json: @schedule
-  end
 
   private
     def set_schedule
@@ -42,6 +19,6 @@ class V1::SchedulesController < V1::BaseController
     end
 
     def schedule_params
-      params.require(:schedule).permit(:start, :name, :days)
+      params.require(:schedule).permit(:date, :name, :turn)
     end
 end
