@@ -43,8 +43,15 @@ class V1::ChannelsController < V1::BaseController
 }
   '
   def channel_shows
+    if params[:day] == "3"
+      @channel.give_shows
+      render json: @channel.give_shows, root: "shows"
+    elsif params[:day] == "2"
     @channel.give_shows
     render json: @channel.give_shows, root: "shows"
+   else
+    render json: @channel.errors, status: 404
+  end
   end
 
 

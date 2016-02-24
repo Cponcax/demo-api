@@ -5,8 +5,13 @@ class Channel < ActiveRecord::Base
 
   def give_shows
     shows = []
+   
     self.schedules.each do |schedule|
-      shows << schedule.shows
+      if schedule.date.wday == 3
+      	shows << schedule.shows
+      elsif schedule.date.wday == 2 
+      	shows << schedule.shows
+      end
     end
     shows.flatten
   end
