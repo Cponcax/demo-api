@@ -17,11 +17,10 @@ Rails.application.config.to_prepare do
     private
         
       def validate_alive_tokens
-        resource_owner.access_tokens.size < 2 or resource_owner.access_tokens.last(2).any? {|token| token.expired? }
+        resource_owner.alive_tokens.size < 2
       end
   end
 end
-
 
 Rails.application.config.to_prepare do
   Doorkeeper::Errors.class_eval do

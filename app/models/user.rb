@@ -32,6 +32,10 @@ class User < ActiveRecord::Base
   before_create :generate_code
 
   before_save { self.email = email.downcase }
+
+  def alive_tokens
+    access_tokens.select {|token| !token.revoked? }
+  end
   
   private
 

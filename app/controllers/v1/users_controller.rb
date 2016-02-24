@@ -2,6 +2,8 @@ class V1::UsersController < V1::BaseController
   before_action -> { doorkeeper_authorize! :write }, except: :create
   before_action :set_user, only: [:show, :update, :destroy, :update_password]
 
+  include TokensDoc
+
   # GET /users
   # GET /users.json
   def index
@@ -22,7 +24,7 @@ class V1::UsersController < V1::BaseController
     param :first_name, String, :desc => "First name", :required => true
     param :last_name, String, :desc => "Last name", :required => true
     param :email, String, :desc => "Email", :required => true
-    param :password, String, :desc => "Password (minimum 6 characters)", :required => true
+    param :password, String, :desc => "Password (minimum 8 characters)", :required => true
   end
   formats ['json']
   example '
