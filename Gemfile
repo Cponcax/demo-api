@@ -7,8 +7,8 @@ gem 'rails-api'
 
 gem 'spring', :group => :development
 
-
 gem 'pg'
+
 
 group :development, :test do
   gem 'pry'
@@ -25,6 +25,11 @@ group :development, :test do
 
   gem 'better_errors', '~> 2.1', '>= 2.1.1'
   gem 'binding_of_caller', '~> 0.7.2'
+end
+
+group :production do
+
+gem 'rails_12factor'
 end
 
 gem 'figaro'
