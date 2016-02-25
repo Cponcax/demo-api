@@ -45,30 +45,30 @@ class V1::ChannelsController < V1::BaseController
   def channel_shows
     day =  params[:day]
     case
-    when params[:day] == "1"
+    when day == "1"
       @channel.monday
       render json: @channel.monday, root: "shows"
-    when params[:day] == "2"
+    when day == "2"
       @channel.tuesday
       render json: @channel.tuesday, root: "shows"
-    when params[:day] == "3"
+    when day == "3"
       @channel.wednesday
       render json: @channel.wednesday, root: "shows"
-    when params[:day] == "4"
+    when day == "4"
       @channel.thursday
       render json: @channel.thursday, root: "shows"
-    when params[:day] == "5"
+    when day == "5"
       @channel.friday
       render json: @channel.friday, root: "shows"
-    when params[:day] == "6"
+    when day == "6"
       @channel.saturday
       render json: @channel.saturday, root: "shows"
-    when params[:day] == "7"
+    when day == "7"
       @channel.sunday
       render json: @channel.sunday, root: "shows"
-   else
-    render json: @channel.errors, status: 404
-  end
+    else
+     render json: @channel.errors, status: 404
+    end
   end
 
 

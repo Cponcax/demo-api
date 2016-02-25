@@ -7,7 +7,7 @@ class Channel < ActiveRecord::Base
     shows = []
 
     self.schedules.each do |schedule|
-      if schedule.date.wday == 1
+      if schedule.date.wday == 1 && schedule.date.strftime("%U")== Time.current.strftime("%U")
       	shows << schedule.shows
       end
     end
@@ -18,7 +18,7 @@ class Channel < ActiveRecord::Base
     shows = []
 
     self.schedules.each do |schedule|
-      if schedule.date.wday == 2
+      if schedule.date.wday == 2 && schedule.date.strftime("%U")== Time.current.strftime("%U")
         shows << schedule.shows
       end
     end
@@ -29,7 +29,7 @@ class Channel < ActiveRecord::Base
     shows = []
 
     self.schedules.each do |schedule|
-      if schedule.date.wday == 3
+      if schedule.date.wday == 3 && schedule.date.strftime("%U")== Time.current.strftime("%U")
         shows << schedule.shows
       end
     end
@@ -40,7 +40,7 @@ class Channel < ActiveRecord::Base
     shows = []
 
     self.schedules.each do |schedule|
-      if schedule.date.wday == 4
+      if schedule.date.wday == 4 && schedule.date.strftime("%U")== Time.current.strftime("%U")
         shows << schedule.shows
       end
     end
@@ -51,7 +51,7 @@ class Channel < ActiveRecord::Base
     shows = []
 
     self.schedules.each do |schedule|
-      if schedule.date.wday == 5
+      if schedule.date.wday == 5 && schedule.date.strftime("%U")== Time.current.strftime("%U")
         shows << schedule.shows
       end
     end
@@ -61,7 +61,7 @@ class Channel < ActiveRecord::Base
     shows = []
 
     self.schedules.each do |schedule|
-      if schedule.date.wday == 6
+      if schedule.date.wday == 6 && schedule.date.strftime("%U")== Time.current.strftime("%U")
         shows << schedule.shows
       end
     end
@@ -72,7 +72,7 @@ class Channel < ActiveRecord::Base
     shows = []
 
     self.schedules.each do |schedule|
-      if schedule.date.wday == 7
+      if schedule.date.cwday == 7 && schedule.date.strftime("%W") == Time.current.strftime("%W")
         shows << schedule.shows
       end
     end
