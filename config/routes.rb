@@ -38,7 +38,7 @@ Rails.application.routes.draw do
 
     resources :channels, only: [:index, :show ] do
       collection do
-          get '/:id/shows', to: 'channels#channel_shows'
+          get '/:id/schedules', to: 'channels#channel_shows'
       end
     end
 
