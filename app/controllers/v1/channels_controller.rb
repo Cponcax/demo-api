@@ -13,7 +13,7 @@ class V1::ChannelsController < V1::BaseController
   end
 
 
- api :GET, "/channels/:id/shows", "View shows per channel"
+ api :GET, "/channels/:id/schedules?day=1", "Get list of programs per channel per schedules per day. Where monday is 1 and sunday is 7"
   param_group :error, V1::BaseController
   param :shows, Hash, :desc => "Contains show information.", :required => true do
     param :channel_id, :number, :required => true
