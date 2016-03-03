@@ -1,7 +1,6 @@
 class V1::ChannelsController < V1::BaseController
   before_action :set_channel, only: [:show, :channel_shows]
 
-  respond_to :html
 
   def index
     @channels = Channel.all
