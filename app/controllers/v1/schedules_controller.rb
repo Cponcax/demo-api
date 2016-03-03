@@ -1,7 +1,6 @@
 class V1::SchedulesController < V1::BaseController
   before_action :set_schedule, only: [:show, :edit, :update, :destroy]
 
-  respond_to :html
 
   def index
     @schedules = Schedule.all
