@@ -19,7 +19,7 @@ class Channel < ActiveRecord::Base
 
     self.schedules.each do |schedule|
       if schedule.date.wday == 2 && schedule.date.strftime("%U")== Time.current.strftime("%U")
-        shows << schedule.shows
+        shows << schedule.shows.order('start_time ASC')
       end
     end
     shows.flatten
@@ -30,7 +30,7 @@ class Channel < ActiveRecord::Base
 
     self.schedules.each do |schedule|
       if schedule.date.wday == 3 && schedule.date.strftime("%U")== Time.current.strftime("%U")
-        shows << schedule.shows
+        shows << schedule.shows.order('start_time ASC')
       end
     end
     shows.flatten
@@ -41,7 +41,7 @@ class Channel < ActiveRecord::Base
 
     self.schedules.each do |schedule|
       if schedule.date.wday == 4 && schedule.date.strftime("%U")== Time.current.strftime("%U")
-        shows << schedule.shows
+        shows << schedule.shows.order('start_time ASC')
       end
     end
     shows.flatten
@@ -52,7 +52,7 @@ class Channel < ActiveRecord::Base
 
     self.schedules.each do |schedule|
       if schedule.date.wday == 5 && schedule.date.strftime("%U")== Time.current.strftime("%U")
-        shows << schedule.shows
+        shows << schedule.shows.order('start_time ASC')
       end
     end
     shows.flatten
@@ -62,7 +62,7 @@ class Channel < ActiveRecord::Base
 
     self.schedules.each do |schedule|
       if schedule.date.wday == 6 && schedule.date.strftime("%U")== Time.current.strftime("%U")
-        shows << schedule.shows
+        shows << schedule.shows.order('start_time ASC')
       end
     end
     shows.flatten
@@ -73,7 +73,7 @@ class Channel < ActiveRecord::Base
 
     self.schedules.each do |schedule|
       if schedule.date.cwday == 7 && schedule.date.strftime("%W") == Time.current.strftime("%W")
-        shows << schedule.shows
+        shows << schedule.shows.order('start_time ASC')
       end
     end
     shows.flatten
