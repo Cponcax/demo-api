@@ -1,5 +1,12 @@
 class Channel < ActiveRecord::Base
+  include Imageable
+
   has_many :schedules
+
+  has_attached_file :logo,
+  styles: lambda { |a| a.instance.styles :logo },
+  :default_url => lambda { |attachment| attachment.instance.default_url },
+  url: '/system/:class/:attachment/:id/:access_token_:style.:extension'
 
   validates :name,  :position, :streaming_url, :logo_color, presence: true
 
