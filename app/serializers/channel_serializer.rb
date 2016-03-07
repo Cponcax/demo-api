@@ -3,8 +3,6 @@ class ChannelSerializer < ActiveModel::Serializer
 
 
 #fields  Serializer only example
-  def  logo
-    object = "https://i.ytimg.com/vi/Q0NzALRJifI/maxresdefault.jpg"
-  end
+  
 
 end

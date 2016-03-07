@@ -40,10 +40,10 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
 
-  config.action_mailer.perform_deliveries = true 
-  
+  config.action_mailer.perform_deliveries = true
+
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = true 
+  config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.default :charset => "utf-8"
 
@@ -56,4 +56,17 @@ Rails.application.configure do
     user_name: ENV.fetch('mandrill_user'),
     password: ENV.fetch('mandrill_api_key')
   }
+
+
+  config.paperclip_defaults = {
+  :storage => :fog,
+  :fog_credentials => {
+    provider: "AWS",
+    aws_access_key_id: ENV.fetch('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key: ENV.fetch('AWS_SECRET_ACCESS_KEY'),
+    region: ENV.fetch('S3_REGION'),
+    path_style: true
+  },
+  :fog_directory => ENV.fetch('S3_BUCKET_NAME')
+}
 end

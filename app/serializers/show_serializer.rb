@@ -9,13 +9,5 @@ class ShowSerializer < ActiveModel::Serializer
     object.schedules.first.turn
   end
 
-#fields  Serializer only example
-  def  logo
-    object = "https://i.ytimg.com/vi/Q0NzALRJifI/maxresdefault.jpg"
-  end
-
-  def  cover
-    object = "https://i.ytimg.com/vi/Q0NzALRJifI/maxresdefault.jpg"
-  end
 
 end
