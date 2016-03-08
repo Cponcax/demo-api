@@ -4,8 +4,5 @@ class ChannelSerializer < ActiveModel::Serializer
 
 #fields  Serializer only example
 
-  def logo
-    object.logo.path
 
-  end
 end
