@@ -3,6 +3,6 @@ class ChannelSerializer < ActiveModel::Serializer
 
 
 #fields  Serializer only example
-  
+
 
 end
