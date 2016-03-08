@@ -1,5 +1,5 @@
 class ShowSerializer < ActiveModel::Serializer
-  attributes :id, :name, :rating, :logo, :cover, :start_time, :turn
+  attributes :id, :name, :rating, :logo, :date, :cover, :start_time, :turn
 
   def start_time
     object.events.first.start_time
@@ -9,5 +9,12 @@ class ShowSerializer < ActiveModel::Serializer
     object.schedules.first.turn
   end
 
+  def logo
+    object.url
+  end
+
+  def date
+    object.schedules.last.date
+  end
 
 end
