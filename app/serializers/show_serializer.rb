@@ -9,10 +9,6 @@ class ShowSerializer < ActiveModel::Serializer
     object.schedules.first.turn
   end
 
-  def logo
-    object.url
-  end
-
   def date
     object.schedules.last.date
   end
