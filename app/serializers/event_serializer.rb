@@ -1,5 +1,5 @@
 class EventSerializer < ActiveModel::Serializer
-  attributes :channel_id, :show_id , :name, :cover ,:logo ,:rating, :datetime
+  attributes :id,  :channel_id,  :name, :cover ,:logo ,:rating, :datetime
 
   def name
     object.show.name
