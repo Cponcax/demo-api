@@ -12,14 +12,7 @@ class  V1::ShowsController < V1::BaseController
     render json: @show
   end
   api :GET, "/shows/live", "View shows live "
-    param_group :error, V1::BaseController
-    param :shows, Hash, :desc => "Contains show information.", :required => true do
-      param :id, :number, :required => true
-      param :name, String, :desc => "show name" , :required => true
-      param :logo, String, :desc => "logo of the show", :required => true
-      param :cover, String, :desc => "cover of the show", :required => true
-
-    end
+    
   formats ['json']
   example'
   {

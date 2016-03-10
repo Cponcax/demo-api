@@ -20,7 +20,21 @@ module TokensDoc
   {
     "grant_type":"refresh_token",
     "refresh_token":"ac71b2be0ba7cfe970f41434fd8ebd356a2cb6035c8bdfc064f395e2af23fd4"
-  }'
+  }
+
+  
+  return token
+      {
+    "access_token": "c24ad7cd511af2464b61347638ae56cd04b08d7f08245d665068c781b153bf5c",
+    "token_type": "bearer",
+    "expires_in": 7200,
+    "refresh_token": "aae029dbad215363db3608f58f977bcea8c6c80ae8d33e787f6fab7d4a523802",
+    "scope": "write",
+    "created_at": 1457564550
+    }
+  '
+
+
   def token
     # ...
   end
