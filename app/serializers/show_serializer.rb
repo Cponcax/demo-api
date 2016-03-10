@@ -1,16 +1,17 @@
 class ShowSerializer < ActiveModel::Serializer
-  attributes :id, :name, :rating, :logo, :date, :cover, :start_time, :turn
+  attributes :id, :name, :rating, :logo, :datetime, :cover,  :turn
 
-  def start_time
-    object.events.first.start_time
-  end
+
 
   def turn
     object.schedules.first.turn
   end
 
-  def date
-    object.schedules.last.date
+  def datetime
+
+    d = object.schedules.first.date
+    t = object.events.first.start_time
+    dt = DateTime.new(d.year, d.month , d.day, t.hour, t.min, t.sec)
   end
 
 end

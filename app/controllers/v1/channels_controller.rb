@@ -13,53 +13,52 @@ class V1::ChannelsController < V1::BaseController
 
 
  api :GET, "/channels/:id/schedules?day=1", "Get list of programs per channel per schedules per day. Where monday is 1 and sunday is 7"
-  param_group :error, V1::BaseController
-  param :shows, Hash, :desc => "Contains show information.", :required => true do
-    param :name, String, :desc => "show name" , :required => true
-    param :cover, String, :desc => "cover of the ", :required => true
-    param :start_time, String, :desc => "start time ", :required => true
-  end
+
+
+    param :id, Integer, :desc => "id of channel" , :required => true
+    param :day, Integer, :desc => "day of the week  ", :required => true
+
+
   formats ['json']
   example'
 
 {
-  "shows":[
+  "Events":[
     {
     "id": 1,
-    "name": "viva la manana",
-    "rating": "PG",
-    "logo": "https://i.ytimg.com/vi/Q0NzALRJifI/maxresdefault.jpg",
-    "cover": "https://i.ytimg.com/vi/Q0NzALRJifI/maxresdefault.jpg",
-    "start_time": "2000-01-01T16:20:00.000Z",
-    "turn": "tarde"
+    "name": "TCS noticias",
+    "rating": "nc_17",
+    "logo": "/system/shows/logos/1/download_%282%29_original.jpeg?1457453604",
+    "datetime": "2016-03-07T06:14:00.000+00:00",
+    "cover": "/system/shows/covers/1/download_%283%29_original.jpeg?1457453604",
+    "turn": "morning"
     }
   ]
-}
   '
   def channel_shows
     day =  params[:day]
     case
     when day == "1"
       @channel.monday
-      render json: @channel.monday, root: "shows"
+      render json: @channel.monday, root: "events"
     when day == "2"
       @channel.tuesday
-      render json: @channel.tuesday, root: "shows"
+      render json: @channel.tuesday, root: "events"
     when day == "3"
       @channel.wednesday
-      render json: @channel.wednesday, root: "shows"
+      render json: @channel.wednesday, root: "events"
     when day == "4"
       @channel.thursday
-      render json: @channel.thursday, root: "shows"
+      render json: @channel.thursday, root: "events"
     when day == "5"
       @channel.friday
-      render json: @channel.friday, root: "shows"
+      render json: @channel.friday, root: "events"
     when day == "6"
       @channel.saturday
-      render json: @channel.saturday, root: "shows"
+      render json: @channel.saturday, root: "events"
     when day == "7"
       @channel.sunday
-      render json: @channel.sunday, root: "shows"
+      render json: @channel.sunday, root: "events"
     else
      render json: @channel.errors, status: 404
     end
