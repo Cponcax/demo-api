@@ -37,6 +37,18 @@ class User < ActiveRecord::Base
     access_tokens.select {|token| !token.revoked? }
   end
 
+  def create_access_token
+    @request ||= Doorkeeper::OAuth::PasswordAccessTokenRequest.new(
+         Doorkeeper.configuration,
+         nil,
+         self,
+         { grant_type: "password", scope: "write" }
+       )
+     @response = @request.authorize
+     @token = @response.token
+  end
+
+
   private
 
     def generate_code

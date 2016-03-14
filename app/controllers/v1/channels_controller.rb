@@ -37,22 +37,15 @@ class V1::ChannelsController < V1::BaseController
   '
   def channel_shows
     day =  params[:day]
-
-
-    zone = params[:zone]
-    #
-    # dateTime = "March 07, 2016"
-    #dateTime.in_time_zone.utc
-    # Thread.current[:tz_offset] = params[:zone]
-    #  utc = Time.parse("#{dateTime} #{Thread.current[:tz_offset]}").utc
-
-
-    datetime = DateTime.now
-    datetime_utc = DateTime.now.utc
-    dateTime_offset =  "#{datetime.hour.to_i - zone.to_i}" #{}"::#{d.min}:#{d.sec} "
+    unixdate = params[:date]
+    date = unixdate.to_i
+    date_parse = Time.at(date).to_datetime
+    # date_conver = DateTime.parse(date)
+    #date_current_parse = date_parse.new_offset(DateTime.now.offset)
+    date_current = DateTime.now
     case
-    when day == "1"
-      @channel.monday 
+    when day == "1" && date_parse.hour == date_current.hour
+      @channel.monday
       render json: @channel.monday, root: "events"
     when day == "2"
       @channel.tuesday
@@ -79,6 +72,8 @@ class V1::ChannelsController < V1::BaseController
 
 
   private
+
+
     def set_channel
       @channel = Channel.find(params[:id])
     end
