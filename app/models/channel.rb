@@ -24,9 +24,6 @@ class Channel < ActiveRecord::Base
 
       filter_events = events.select { |e|
         uwday == wday && hour == e.start_time.hour
-    puts "hour : "+ hour.to_s
-      puts "hour : "+  e.start_time.hour.to_s
-        puts "day : "+  uwday.to_s
       }
       shows << filter_events
     end
