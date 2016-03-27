@@ -14,7 +14,7 @@ class V1::ChannelsController < V1::BaseController
 
  api :GET, "/channels/:id/schedules?day=1&date=1458166403", "Get list of programs per channel per schedules per day. Where monday is 1 and sunday is 7"
     param :id, Integer, :desc => "Id of the channel" , :required => true
-    param :day, Integer, :desc => "Day of the week in number where Mondar is 1 and Sunday is 0  ", :required => true
+    param :day, Integer, :desc => "Day of the week in number where Mondar is 1 and Sunday is 0", :required => true
     param :date, Integer, :desc => "Date in format Unix timestamp ", :required => true
     formats ['json']
     example'
