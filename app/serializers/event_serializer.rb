@@ -1,10 +1,7 @@
 class EventSerializer < ActiveModel::Serializer
   attributes :id,  :channel_id,  :name, :cover ,:logo ,:rating, :datetime, :streaming_url
 
-  def streaming_url
-    object.show.streaming_url
-  end
-  
+
   def name
     object.show.name
   end
