@@ -12,7 +12,7 @@ class  V1::ShowsController < V1::BaseController
     render json: @show
   end
   api :GET, "/shows/live", "View shows live "
-    
+
   formats ['json']
   example'
   {

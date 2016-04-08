@@ -1,6 +1,6 @@
 class Show < ActiveRecord::Base
   include Imageable
-  
+
   has_many :events
   has_many :schedules, through: :events
 
@@ -23,9 +23,5 @@ class Show < ActiveRecord::Base
   end
 
 
- # def self.day
- #    day = Date.today
- #    Schedule.where("date = ?", day)
- #  end
 
 end

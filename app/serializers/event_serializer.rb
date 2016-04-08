@@ -1,6 +1,19 @@
 class EventSerializer < ActiveModel::Serializer
-  attributes :id,  :channel_id,  :name, :cover ,:logo ,:rating, :datetime, :streaming_url
+  attributes :id,  :channel_id, :channel_name ,:name, :cover ,:logo, :logo_channel ,:logo_color, :rating, :datetime, :streaming_url
 
+
+  def channel_name
+    object.schedule.channel.name
+  end
+
+  def logo_color
+    object.schedule.channel.logo_color
+  end
+
+
+   def logo_channel
+    object.schedule.channel.logo
+   end
 
   def name
     object.show.name
@@ -33,6 +46,7 @@ class EventSerializer < ActiveModel::Serializer
  def rating
    object.show.rating
  end
+
  def show_id
    object.show.id
  end

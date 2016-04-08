@@ -12,4 +12,5 @@ class Event < ActiveRecord::Base
     where("start_time <=? AND end_time >=?", t, t )
   end
 
+
 end
