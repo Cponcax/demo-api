@@ -3,9 +3,16 @@ class Oauth::TokensController < Doorkeeper::TokensController
 
   after_action :identify_origin, only: [:create]
 
-    def create
-      super
-    end
+  def create
+    puts "CREANDO TOKEN"
+    response = authorize_response
+    user = User.find(authorize_response.token.resource_owner_id)
+    self.headers.merge! response.headers
+    self.response_body = response.body.merge({ user: { first_name: user.first_name, last_name: user.last_name,email: user.email} } ).to_json
+    self.status        = response.status
+  rescue Errors::DoorkeeperError => e
+    handle_token_exception e
+  end
 
     # OAuth 2.0 Token Revocation - http://tools.ietf.org/html/rfc7009
     def revoke
