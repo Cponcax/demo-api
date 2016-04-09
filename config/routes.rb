@@ -2,7 +2,6 @@ require 'restrictions'
 
 Rails.application.routes.draw do
 
-
   apipie
   use_doorkeeper do
     # it accepts :authorizations, :tokens, :applications and :authorized_applications
@@ -43,6 +42,9 @@ Rails.application.routes.draw do
     end
 
     resources :schedules,  only: [:index, :show ]
+#
+  #  resources :terms,  only: [:index, :show ]
+    get '/terms', to: "terms#get_term"
 
     resources :events,   only: [:index, :show ]
 
