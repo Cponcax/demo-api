@@ -1,4 +1,5 @@
 class V1::EventsController < V1::BaseController
+  before_action -> { doorkeeper_authorize! :write }
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
   def index

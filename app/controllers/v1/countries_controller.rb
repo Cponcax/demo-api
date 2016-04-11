@@ -1,4 +1,5 @@
 class V1::CountriesController < V1::BaseController
+  before_action -> { doorkeeper_authorize! :write }
   before_action :set_country, only: [:show, :edit, :update, :destroy]
 
   respond_to :html
