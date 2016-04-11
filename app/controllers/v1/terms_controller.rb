@@ -1,5 +1,5 @@
 class V1::TermsController < V1::BaseController
-  before_action -> { doorkeeper_authorize! :write }
+  #before_action -> { doorkeeper_authorize! :write }
   before_action :set_term, only: [:show, :edit, :update, :destroy]
 
   respond_to :html
