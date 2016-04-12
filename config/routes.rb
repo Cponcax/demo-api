@@ -59,7 +59,7 @@ Rails.application.routes.draw do
       collection do
         get 'status'
 
-        post 'authorizer'
+        post 'authorize'
         post 'payment'
         delete 'cancel'
       end

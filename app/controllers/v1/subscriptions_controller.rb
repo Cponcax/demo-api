@@ -36,11 +36,21 @@ class V1::SubscriptionsController < V1::BaseController
   end
 
   #methods to payment
-  def authorizer
-    puts "HOLAAAA:::::::::::"
-  puts "authorization code::: " + params[:authorization_code].inspect
+  def authorize
+  puts "CODE AUTHENTICATION::: "  + params[:authorization_code].inspect
     @result = Subscription.getAccessToken(params[:authorization_code])
 
+    if @result
+      render json: { message: "Ok" }, status: :ok
+    else
+      render json: { error: "Fail" }, status: :unprocessable_entity
+    end
+  end
+
+  def payment
+    puts "metadata_id::: " + params[:metadata_id]
+    @result = Subscription.makePayment(current_resource_owner, params[:metadata_id])
+​
     if @result
       render json: { message: "Ok" }, status: :ok
     else
