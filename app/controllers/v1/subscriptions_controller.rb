@@ -66,6 +66,10 @@ class V1::SubscriptionsController < V1::BaseController
     render json: @payment
   end
 
+  def cancel
+    
+  end
+
   private
     def set_subscription
       @subscription = Subscription.find(params[:id])

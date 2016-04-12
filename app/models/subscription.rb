@@ -28,7 +28,7 @@ class Subscription < ActiveRecord::Base
       #logger.info tokeninfo.to_hash
 
        payment_token =  user.payment_tokens.create!("token_type" => tokeninfo.token_type, "expires_in" => tokeninfo.expires_in, "expires_in" => tokeninfo.expires_in,
-       "refresh_token" => tokeninfo.refresh_token, "access_token" => tokeninfo.access_token, "user" => user )
+       "refresh_token" => tokeninfo.refresh_token, "access_token" => access_token )
       
     end
 
@@ -55,7 +55,7 @@ class Subscription < ActiveRecord::Base
       future_payment = FuturePayment.new(payment.merge( :token => access_token ))
       success = future_payment.create(correlation_id)
 
-      
+
       # check response for status
         if success
           logger.info "future payment successfully created"
