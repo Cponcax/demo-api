@@ -16,7 +16,9 @@ class User < ActiveRecord::Base
 
   # reminders
   has_many :reminders
-
+  #for sdk paypal
+  has_many :payment_tokens
+  
   validates :first_name, :last_name, :email, presence: true
   validates :password, presence: true,  length: { in: 6..20 }, on: :create
 

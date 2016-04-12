@@ -1,4 +1,5 @@
 class V1::SubscriptionsController < V1::BaseController
+  before_action -> { doorkeeper_authorize! :write }
   before_action :set_subscription, only: [:show, :edit, :update, :destroy]
 
 
@@ -37,8 +38,10 @@ class V1::SubscriptionsController < V1::BaseController
 
   #methods to payment
   def authorize
-  puts "CODE AUTHENTICATION::: "  + params[:authorization_code].inspect
-    @result = Subscription.getAccessToken(params[:authorization_code])
+    # puts "USER" + current_resource_owner.inspect
+    # puts "RECUESS" + request.headers.inspect
+    # puts "CODE:::: "  + params[:authorization_code]
+    @result = Subscription.getAccessToken(current_resource_owner, params[:authorization_code])
 
     if @result
       render json: { message: "Ok" }, status: :ok
@@ -50,12 +53,17 @@ class V1::SubscriptionsController < V1::BaseController
   def payment
     puts "metadata_id::: " + params[:metadata_id]
     @result = Subscription.makePayment(current_resource_owner, params[:metadata_id])
-​
+
     if @result
       render json: { message: "Ok" }, status: :ok
     else
       render json: { error: "Fail" }, status: :unprocessable_entity
     end
+  end
+
+  def status
+    @payment = Payment.find('PAY-2WT75022387566739K4GUCAA')
+    render json: @payment
   end
 
   private

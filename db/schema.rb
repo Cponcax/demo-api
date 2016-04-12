@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160412070417) do
+ActiveRecord::Schema.define(version: 20160412200347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,6 +92,18 @@ ActiveRecord::Schema.define(version: 20160412070417) do
   end
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
+
+  create_table "payment_tokens", force: :cascade do |t|
+    t.string   "token_type"
+    t.string   "expires_in"
+    t.integer  "refresh_token"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "user_id"
+    t.string   "access_token"
+  end
+
+  add_index "payment_tokens", ["user_id"], name: "index_payment_tokens_on_user_id", using: :btree
 
   create_table "reminders", force: :cascade do |t|
     t.integer  "user_id"
@@ -211,5 +223,6 @@ ActiveRecord::Schema.define(version: 20160412070417) do
 
   add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
 
+  add_foreign_key "payment_tokens", "users"
   add_foreign_key "users", "countries"
 end
