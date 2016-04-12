@@ -1,5 +1,5 @@
 class  V1::ShowsController < V1::BaseController
-  #before_action -> { doorkeeper_authorize! :write }
+  before_action -> { doorkeeper_authorize! :write }
   before_action :set_show, only: [:show]
 
   respond_to :html
