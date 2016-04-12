@@ -1,6 +1,6 @@
 Rails.application.config.to_prepare do
   Doorkeeper::OAuth::PasswordAccessTokenRequest.class_eval do
-    #validate :alive_tokens, error: :limit_tokens
+    validate :alive_tokens , error: :limit_tokens
 
   def initialize(server, credentials, resource_owner, parameters = {})
     @server          = server
