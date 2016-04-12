@@ -258,6 +258,10 @@ GEM
       mimemagic (= 0.3.0)
     paranoia (2.1.5)
       activerecord (~> 4.0)
+    paypal-sdk-rest (1.4.4)
+      multi_json (~> 1.0)
+      uuidtools (~> 2.1)
+      xml-simple
     pg (0.18.4)
     pry (0.10.3)
       coderay (~> 1.1.0)
@@ -369,6 +373,7 @@ GEM
     trollop (2.1.2)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    uuidtools (2.1.5)
     warden (1.2.6)
       rack (>= 1.0)
     xml-simple (1.1.5)
@@ -397,6 +402,7 @@ DEPENDENCIES
   mandrill_mailer (~> 1.2)
   paperclip (~> 4.3)
   paranoia (~> 2.0)
+  paypal-sdk-rest
   pg
   pry
   pry-rails
