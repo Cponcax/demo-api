@@ -1,4 +1,5 @@
 class V1::ChannelsController < V1::BaseController
+  #before_action -> { doorkeeper_authorize! :write }
   before_action :set_channel, only: [:show, :channel_shows]
 
 
