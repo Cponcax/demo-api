@@ -25,16 +25,17 @@ module TokensDoc
 
   return token
   {
-    "access_token": "10cb16bd3201e5a83ff26714dd2d351fe417684dd232c70acb5d6a5691f095a9",
+    "access_token": "6e94384243526c0b49df9d74b5305521469381331887bf583f1b56a24dd5fb40",
     "token_type": "bearer",
-    "expires_in": 7200,
-    "refresh_token": "912420b5eb4502ba6c763dc6ec27b3aec3ee418bd8a24597229f6e50779d9dd6",
+    "expires_in": 60,
+    "refresh_token": "f059344be1d17c1922baa484447240dea304e3ca04243fa532afa06bf729d65f",
     "scope": "write",
-    "created_at": 1460148411,
+    "created_at": 1460499508,
     "user":{
-    "first_name": "de Arco",
-    "last_name": "Ponce",
-    "email": "prueba13@gmail.com"
+    "id": 71,
+    "first_name": "ALEX",
+    "last_name": "POmce",
+    "email": "ponce12@gmail.com"
     }
   }
   '
