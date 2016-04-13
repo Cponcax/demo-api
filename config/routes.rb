@@ -62,6 +62,7 @@ Rails.application.routes.draw do
         post 'authorize'
         post 'payment'
         delete 'cancel'
+        post 'sync' 
       end
     end
 

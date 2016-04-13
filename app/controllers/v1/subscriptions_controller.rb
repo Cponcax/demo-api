@@ -2,7 +2,6 @@ class V1::SubscriptionsController < V1::BaseController
   before_action -> { doorkeeper_authorize! :write }
   before_action :set_subscription, only: [:show, :edit, :update, :destroy]
 
-
   def index
     @subscriptions = Subscription.all
     render json: @subscriptions
@@ -62,12 +61,34 @@ class V1::SubscriptionsController < V1::BaseController
   end
 
   def status
-    @payment = Payment.find('PAY-2WT75022387566739K4GUCAA')
+    @payment = Subscription.all
+    @payment.status
+    
     render json: @payment
   end
 
   def cancel
-    
+    puts "ENTRASTE"
+    @cancel = Subscription.remove(current_resource_owner)
+     
+     puts "RESPUESTA" + @cancel.inspect
+    if @cancel 
+      render json: {message: "Delete"}, status: :ok
+    else
+      render json: {error: "Fail"}, status: :unprocessable_entity
+    end
+  end
+
+  #method for save supcription to Iphone
+  def sync
+    @sym = Subscription.PaymentIos(current_resource_owner, params[:start_date], 
+      params[:end_date], params[:transaction_id], params[:identifier], params[:cancelled])
+
+    if @sym 
+      render json: {message: "OK"}, status: :ok
+    else
+      render json: {error: "Fail"}, status: :unprocessable_entity
+    end
   end
 
   private
@@ -76,6 +97,6 @@ class V1::SubscriptionsController < V1::BaseController
     end
 
     def subscription_params
-      params.require(:subscription).permit(:start_date, :end_date)
+      params.require(:subscription).permit(:start_date, :end_date,:transaction_id, :identifier, :cancelled)
     end
 end
