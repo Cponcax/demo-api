@@ -22,6 +22,7 @@ class Oauth::TokensController < Doorkeeper::TokensController
 
     rescue Doorkeeper::Errors::DoorkeeperError => e
     handle_token_exception e
+   
   end
 
     # OAuth 2.0 Token Revocation - http://tools.ietf.org/html/rfc7009

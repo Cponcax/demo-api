@@ -37,9 +37,11 @@ class V1::SubscriptionsController < V1::BaseController
 
   #methods to payment
   def authorize
-    # puts "USER" + current_resource_owner.inspect
-    # puts "RECUESS" + request.headers.inspect
-    # puts "CODE:::: "  + params[:authorization_code]
+    user = current_resource_owner
+    token = user.access_tokens
+    puts "USER" + token.inspect
+    #puts "RECUESS" + request.headers.inspect
+    puts "CODE:::: "  + params[:authorization_code]
     @result = Subscription.getAccessToken(current_resource_owner, params[:authorization_code])
 
     if @result
@@ -51,7 +53,13 @@ class V1::SubscriptionsController < V1::BaseController
 
   def payment
     puts "metadata_id::: " + params[:metadata_id]
-    @result = Subscription.makePayment(current_resource_owner, params[:metadata_id])
+    user = current_resource_owner
+    if user.subscriptions.present? == false
+    @result = Subscription.firtsMakePayment(current_resource_owner, params[:metadata_id])
+
+    else
+      @result = Subscription.makePayment(current_resource_owner, params[:metadata_id])
+    end
 
     if @result
       render json: { message: "Ok" }, status: :ok
@@ -61,9 +69,9 @@ class V1::SubscriptionsController < V1::BaseController
   end
 
   def status
-    @payment = Subscription.all
-    @payment.status
+    @payment = Subscription.status(current_resource_owner)
     
+
     render json: @payment
   end
 
