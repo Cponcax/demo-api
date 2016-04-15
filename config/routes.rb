@@ -69,5 +69,7 @@ Rails.application.routes.draw do
     resources :countries, except: [:new, :edit]
 
     resources :reminders, only: [:index, :create, :destroy]
+
+    resources :itunes_receipts, only: [:create]
   end
 end

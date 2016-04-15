@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
 
   # access tokens from doorkeeper
 
-  # the reason why we do not use the access token as the name of the relationship, 
+  # the reason why we do not use the access token as the name of the relationship,
   # is because apparently generates conflict to call it in the relationship
   has_many :tokens, class_name: Doorkeeper::AccessToken, foreign_key: :resource_owner_id
 
@@ -26,7 +26,10 @@ class User < ActiveRecord::Base
   has_many :payment_tokens
 
   has_many :subscriptions
-  
+
+  # receipts
+  has_many :itunes_receipts, dependent: :destroy
+
   validates :first_name, :last_name, :email, presence: true
   validates :password, presence: true,  length: { in: 6..20 }, on: :create
 
@@ -40,7 +43,7 @@ class User < ActiveRecord::Base
 
 
   before_create :generate_code
-  
+
   after_create :create_access_token
 
 
