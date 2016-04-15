@@ -4,24 +4,16 @@ include PayPal::SDK::Core::Logging
 
 class Subscription < ActiveRecord::Base
   belongs_to :user
-  class << self
-
+  class << self 
+    
     def status(user)
-      # # Fetch Payment
-      #payment = Payment.find("PAY-57363176S1057143SKE2HO3A")
-      # puts "PAYMENT" + payment.inspect
-      # # Get List of Payments
-      # payment_history = Payment.all( :count => 10 )
-      # payment_history.payments
-      #where("? BETWEEN start_time AND end_time", t )
-      #where("start_time <=? AND end_time >=?", t, t )
       t = Time.current
+      user.subscriptions.where("end_date < ?", t ).update_all(status: false)
       user.subscriptions.where("? BETWEEN start_date AND end_date", t )
     end
 
     def getAccessToken(user, authorization_code)
       # authorization code from mobile sdk
-      #authorization_code = ''
       # exchange authorization code with refresh/access token
   
       logger.info "Exchange authorization code with refresh/access token"
@@ -32,7 +24,6 @@ class Subscription < ActiveRecord::Base
 
       # more attribute available in tokeninfo
       logger.info "INFORMATION TOKEN HASH"
-      #logger.info tokeninfo.to_hash
 
       payment_token =  user.payment_tokens.create!("token_type" => tokeninfo.token_type, 
       "expires_in" => tokeninfo.expires_in, "expires_in" => tokeninfo.expires_in,
@@ -54,14 +45,11 @@ class Subscription < ActiveRecord::Base
           "description" =>  "This is the payment transaction description." } ] }
 
       #get access token from database
-
       access_token =  user.payment_tokens.last.access_token
-
-      #verificar el estado del token, es v'alido?
 
       #CREATE susbscription 
       Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,
-        "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "payment" => false)
+        "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
 
       # Create Payments
       if user.subscriptions.last.cancelled == false  && user.subscriptions.last.end_date < Time.current 
@@ -85,7 +73,7 @@ class Subscription < ActiveRecord::Base
     end
 
 
-    def firtsMakePayment(user, metadata_id = '')
+    def firstMakePayment(user, metadata_id = '')
       correlation_id = metadata_id
 
       # Initialize the payment object
@@ -104,7 +92,7 @@ class Subscription < ActiveRecord::Base
 
       #CREATE susbscription 
       Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,
-        "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "payment" => false)
+        "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
 
       # Create Payments
       logger.info "Create Future Payment"
@@ -114,13 +102,13 @@ class Subscription < ActiveRecord::Base
       # check response for status
       if success
         logger.info "future payment successfully created"
-        user.subscriptions.last.update!("payment" => true)
+        
       else
         logger.info "future payment creation failed"
       end
     end
 
-    def remove(user)
+    def cancel(user)
       if user.subscriptions.last.cancelled == true
         access_token = user.payment_tokens
         access_token.destroy_all

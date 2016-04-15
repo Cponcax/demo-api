@@ -2,39 +2,6 @@ class V1::SubscriptionsController < V1::BaseController
   before_action -> { doorkeeper_authorize! :write }
   before_action :set_subscription, only: [:show, :edit, :update, :destroy]
 
-  def index
-    @subscriptions = Subscription.all
-    render json: @subscriptions
-  end
-
-  def show
-    render json: @subscription
-  end
-
-  def new
-    @subscription = Subscription.new
-    render json: @subscription
-  end
-
-  def edit
-  end
-
-  def create
-    @subscription = Subscription.new(subscription_params)
-    @subscription.save
-    render json: @subscription
-  end
-
-  def update
-    @subscription.update(subscription_params)
-    render json: @subscription
-  end
-
-  def destroy
-    @subscription.destroy
-    render json: @subscription
-  end
-
   #methods to payment
   def authorize
     user = current_resource_owner
@@ -54,8 +21,9 @@ class V1::SubscriptionsController < V1::BaseController
   def payment
     puts "metadata_id::: " + params[:metadata_id]
     user = current_resource_owner
+
     if user.subscriptions.present? == false
-    @result = Subscription.firtsMakePayment(current_resource_owner, params[:metadata_id])
+    @result = Subscription.firstMakePayment(current_resource_owner, params[:metadata_id])
 
     else
       @result = Subscription.makePayment(current_resource_owner, params[:metadata_id])
@@ -76,7 +44,7 @@ class V1::SubscriptionsController < V1::BaseController
 
   def cancel
     puts "ENTRASTE"
-    @cancel = Subscription.remove(current_resource_owner)
+    @cancel = Subscription.cancel(current_resource_owner)
      
      puts "RESPUESTA" + @cancel.inspect
     if @cancel 
