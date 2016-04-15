@@ -29,33 +29,19 @@ class V1::UsersController < V1::BaseController
   formats ['json']
   example '
   {
-    {
-      "user":{
-      "id": 5,
-      "username": "carol",
-      "first_name": "Carol",
-      "last_name": "X",
-      "email": "gponcax@gmail.com",
-      "gender": "female",
-      "birth_date": null,
-      "bio": null,
-      "access_tokens":[
-          {
-          "access_token": "a1469ea0f52fa4c55a0a9236043d55725ffa7ca684c061afc0ea974666ca11d5",
-          "token_type": "bearer",
-          "expires_in": 7200,
-          "refresh_token": "2d848eae89b13c6142db3833819098bb22151e04a5fcb267060aa04e26c81271",
-          "scope": "write",
-          "created_at": 1460609090
-          }
-        ]
-      }
+  "user": {
+    "username":"carol",
+    "first_name":"Carol",
+    "last_name":"X",
+    "email":"carol@gmail.com",
+    "password":"welcome"
     }
   }'
   def create
     @user = User.new(user_params)
 
     if @user.save && @user.create_access_token
+      puts "USER:::" + @user.inspect # banding.pry
       render json: @user, status: :created
     else
       render json: @user.errors, status: :unprocessable_entity

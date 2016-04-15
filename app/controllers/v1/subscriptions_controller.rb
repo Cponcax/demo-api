@@ -70,7 +70,6 @@ class V1::SubscriptionsController < V1::BaseController
 
   def status
     @payment = Subscription.status(current_resource_owner)
-    
 
     render json: @payment
   end

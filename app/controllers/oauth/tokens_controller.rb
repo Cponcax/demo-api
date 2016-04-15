@@ -12,7 +12,7 @@ class Oauth::TokensController < Doorkeeper::TokensController
      user = User.find(response.token.resource_owner_id) rescue nil
 
      unless user.nil?
-       body[:user] = ({ user: { first_name: user.first_name, last_name: user.last_name,email: user.email} } ).as_json
+       body[:user] = ({ first_name: user.first_name, last_name: user.last_name,email: user.email}   ).as_json
      end
     end
 
