@@ -9,7 +9,7 @@ class Subscription < ActiveRecord::Base
     def status(user)
       t = Time.current
       user.subscriptions.where("end_date < ?", t ).update_all(status: false)
-      user.subscriptions.where("? BETWEEN start_date AND end_date", t )
+      user.subscriptions.find_by("? BETWEEN start_date AND end_date", t )
     end
 
     def getAccessToken(user, authorization_code)
@@ -30,48 +30,6 @@ class Subscription < ActiveRecord::Base
       "refresh_token" => tokeninfo.refresh_token, "access_token" => access_token )
      
     end
-
-    def makePayment(user, metadata_id = '')
-      correlation_id = metadata_id
-      # Initialize the payment object
-      payment = {
-        "intent" =>  "sale",
-        "payer" =>  {
-          "payment_method" =>  "paypal" },
-        "transactions" =>  [ {
-          "amount" =>  {
-            "total" =>  "15.00",
-            "currency" =>  "USD" },
-          "description" =>  "This is the payment transaction description." } ] }
-
-      #get access token from database
-      access_token =  user.payment_tokens.last.access_token
-
-      #CREATE susbscription 
-      Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,
-        "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
-
-      # Create Payments
-      if user.subscriptions.last.cancelled == false  && user.subscriptions.last.end_date < Time.current 
-
-        logger.info "Create Future Payment"
-        future_payment = FuturePayment.new(payment.merge( :token => access_token ))
-        success = future_payment.create(correlation_id)
-
-        # check response for status
-        if success
-          logger.info "future payment successfully created"
-          user.subscriptions.last.update!("payment" => true)
-        else
-          logger.info "future payment creation failed"
-        end
-       
-      else
-        logger.info "You already have a subscription"
-        user.subscriptions.last.destroy
-      end
-    end
-
 
     def firstMakePayment(user, metadata_id = '')
       correlation_id = metadata_id
@@ -107,6 +65,52 @@ class Subscription < ActiveRecord::Base
         logger.info "future payment creation failed"
       end
     end
+
+    def recurringPayment(user, metadata_id = '')
+      correlation_id = metadata_id
+      # Initialize the payment object
+      payment = {
+        "intent" =>  "sale",
+        "payer" =>  {
+          "payment_method" =>  "paypal" },
+        "transactions" =>  [ {
+          "amount" =>  {
+            "total" =>  "15.00",
+            "currency" =>  "USD" },
+          "description" =>  "This is the payment transaction description." } ] }
+
+      #get token with refresh_token
+      access_token =  user.payment_tokens.last.access_token
+      #tokeninfo = Tokeninfo.refresh(user.payment_tokens.last.refresh_token)
+
+      #get access token from database
+      #access_token = tokeninfo.refresh_token
+
+      #CREATE susbscription 
+      Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,
+        "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
+
+      # Create Payments
+      if user.subscriptions.last.cancelled == false  && user.subscriptions.last.end_date < Time.current 
+
+        logger.info "Create Future Payment"
+        future_payment = FuturePayment.new(payment.merge( :token => access_token ))
+        success = future_payment.create(correlation_id)
+
+        # check response for status
+        if success
+          logger.info "future payment successfully created"
+          user.subscriptions.last.update!("payment" => true)
+        else
+          logger.info "future payment creation failed"
+        end
+       
+      else
+        logger.info "You already have a subscription"
+        user.subscriptions.last.destroy
+      end
+    end
+
 
     def cancel(user)
       if user.subscriptions.last.cancelled == true
