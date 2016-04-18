@@ -40,12 +40,12 @@ class V1::UsersController < V1::BaseController
   def create
     @user = User.new(user_params)
 
-    if @user.save && @user.create_access_token
-      puts "USER:::" + @user.inspect # banding.pry
+    if @user.save
       render json: @user, status: :created
     else
       render json: @user.errors, status: :unprocessable_entity
     end
+    
   end
 
   api :PUT, "/users/me", "Update a user"

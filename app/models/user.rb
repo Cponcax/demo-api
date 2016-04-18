@@ -12,7 +12,12 @@ class User < ActiveRecord::Base
   belongs_to :country
 
   # access tokens from doorkeeper
-  has_many :access_tokens, class_name: "Doorkeeper::AccessToken", foreign_key: "resource_owner_id"
+
+  # the reason why we do not use the access token as the name of the relationship, 
+  # is because apparently generates conflict to call it in the relationship
+  has_many :tokens, class_name: Doorkeeper::AccessToken, foreign_key: :resource_owner_id
+
+  has_one :token, -> { order 'created_at DESC' }, class_name: Doorkeeper::AccessToken, foreign_key: :resource_owner_id
 
   # reminders
   has_many :reminders
@@ -35,14 +40,18 @@ class User < ActiveRecord::Base
 
 
   before_create :generate_code
+  
+  after_create :create_access_token
+
 
   before_save { self.email = email.downcase }
 
   def alive_tokens
-    access_tokens.select {|token| !token.revoked? }
+    tokens.select {|token| !token.revoked? }
   end
 
   def create_access_token
+    puts "::::CREANDO TOKEN::::::::"
     @request ||= Doorkeeper::OAuth::PasswordAccessTokenRequest.new(
          Doorkeeper.configuration,
          nil,
@@ -51,6 +60,10 @@ class User < ActiveRecord::Base
        )
      @response = @request.authorize
      @token = @response.token
+
+     puts ":::RESPONSE :::" + @response.inspect
+
+     puts ":::TOKEN::" + @token.inspect
   end
 
 
