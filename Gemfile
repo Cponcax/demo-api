@@ -64,3 +64,5 @@ gem 'mandrill_mailer', '~> 1.2'
 gem "paperclip", "~> 4.3"
 gem 'aws-sdk', '< 2.0'
 gem 'fog'
+#paymet skk paypal
+gem 'paypal-sdk-rest'

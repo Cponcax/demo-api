@@ -29,18 +29,19 @@ class V1::UsersController < V1::BaseController
   formats ['json']
   example '
   {
-    "user": {
-      "username":"carol",
-      "first_name":"Carol",
-      "last_name":"X",
-      "email":"carol@gmail.com",
-      "password":"welcome"
+  "user": {
+    "username":"carol",
+    "first_name":"Carol",
+    "last_name":"X",
+    "email":"carol@gmail.com",
+    "password":"welcome"
     }
   }'
   def create
     @user = User.new(user_params)
 
     if @user.save && @user.create_access_token
+      puts "USER:::" + @user.inspect # banding.pry
       render json: @user, status: :created
     else
       render json: @user.errors, status: :unprocessable_entity
