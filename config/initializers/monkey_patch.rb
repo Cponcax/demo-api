@@ -18,7 +18,7 @@ Rails.application.config.to_prepare do
     private
 
       def validate_alive_tokens
-        resource_owner.alive_tokens.size < 2
+        resource_owner.alive_tokens.size < 200
       end
   end
 end
