@@ -37,7 +37,6 @@ class V1::SubscriptionsController < V1::BaseController
   end
 
   def status
-
     @payment = Subscription.status(current_resource_owner)
     if @payment.present? == false
       render json: {message: "you do not have subscriptions"}, status: :unprocessable_entity
@@ -45,6 +44,7 @@ class V1::SubscriptionsController < V1::BaseController
       
       render json: @payment, status: :ok, root: false
     end
+
   end
 
   def cancel

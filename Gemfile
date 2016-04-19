@@ -66,3 +66,5 @@ gem 'aws-sdk', '< 2.0'
 gem 'fog'
 #paymet skk paypal
 gem 'paypal-sdk-rest'
+
+gem "browser"
