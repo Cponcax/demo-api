@@ -37,9 +37,14 @@ class V1::SubscriptionsController < V1::BaseController
   end
 
   def status
+    if params[:dummy]
+      
+    render json: {}, status: :ok 
+    
+   else
     @payment = Subscription.status(current_resource_owner)
-
     render json: @payment
+   end
   end
 
   def cancel
