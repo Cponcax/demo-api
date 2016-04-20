@@ -1,6 +1,7 @@
 require 'paypal-sdk-rest'
 include PayPal::SDK::REST::DataTypes
 include PayPal::SDK::Core::Logging
+include PayPal::SDK::OpenIDConnect
 
 class Subscription < ActiveRecord::Base
   belongs_to :user
@@ -9,7 +10,7 @@ class Subscription < ActiveRecord::Base
     def status(user)
       t = Time.current
       user.subscriptions.where("end_date < ?", t ).update_all(status: false)
-      user.subscriptions.find_by("? BETWEEN start_date AND end_date", t )
+      user.subscriptions.last
     end
 
     def getAccessToken(user, authorization_code)
@@ -47,20 +48,20 @@ class Subscription < ActiveRecord::Base
 
       #get access token from database
       access_token =  user.payment_tokens.last.access_token
-
+      
      
       # Create Payments
       logger.info "Create Future Payment"
       future_payment = FuturePayment.new(payment.merge( :token => access_token ))
       success = future_payment.create(correlation_id)
 
-       #CREATE susbscription 
-      Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,
-      "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
-
-
+    
       # check response for status
       if success
+         #CREATE susbscription 
+        Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,
+        "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
+
         logger.info "future payment successfully created"
         
       else
@@ -82,11 +83,14 @@ class Subscription < ActiveRecord::Base
           "description" =>  "This is the payment transaction description." } ] }
 
       #get token with refresh_token
-       access_token =  user.payment_tokens.last.access_token
-      #tokeninfo = Tokeninfo.refresh(user.payment_tokens.last.refresh_token)
+      # access_token =  user.payment_tokens.last.access_token
+
+      tokeninfo = Tokeninfo.refresh(user.payment_tokens.last.refresh_token)
+      puts "TOKEN-INFO-REFRESH::::::" + tokeninfo.inspect
 
       #get access token from database
-      #access_token = tokeninfo.refresh_token
+
+      access_token = tokeninfo.access_token
 
 
       # Create Payments
@@ -100,13 +104,14 @@ class Subscription < ActiveRecord::Base
         puts "USER::::::" + future_payment.payer.payer_info.email.inspect
       
         puts "USER::::::" + future_payment.transactions.inspect
-      #CREATE susbscription 
-      Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,
-      "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
-
+    
 
       # check response for status
       if success
+        #CREATE susbscription 
+        Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,
+        "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
+
         logger.info "future payment successfully created"
         user.subscriptions.last.update!("payment" => true)
       else
