@@ -2,9 +2,6 @@ class V1::UsersController < V1::BaseController
   before_action -> { doorkeeper_authorize! :write }, except: :create
   before_action :set_user, only: [:show, :update, :destroy, :update_password]
 
-  # require "uri"
-  # require "net/http"
-
   include TokensDoc
 
   # GET /users
@@ -48,7 +45,7 @@ class V1::UsersController < V1::BaseController
     else
       render json: @user.errors, status: :unprocessable_entity
     end
-    
+
   end
 
   api :PUT, "/users/me", "Update a user"
@@ -107,20 +104,6 @@ class V1::UsersController < V1::BaseController
       render json: @user.errors, status: :unprocessable_entity
     end
   end
-
-  def validate_itunes_receipt
-    @receipt = @user.itunes_receipts.first.receipt
-    if @receipt
-      uri = URI('https://sandbox.itunes.apple.com/verifyReceipt')
-      req = Net::HTTP::Post.new(uri, initheader = { 'Content-Type' => 'application/json' })
-      req.body = { "receipt-data" => @user.itunes_receipts.first.receipt, "password" => "0d57caf2188a43b395cb7b54909d49ed" }.to_json
-      res = Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') {|http| http.request req}
-      puts res.body
-    else
-      puts 'Error'
-    end
-  end
-
 
   private
 

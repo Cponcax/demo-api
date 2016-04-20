@@ -15,13 +15,17 @@ class V1::ItunesReceiptsController < V1::BaseController
     }
   '
   def create
-    @itunes_receipt = current_resource_owner.itunes_receipts.new(params[:receipt])
+    @itunes_receipt = current_resource_owner.itunes_receipts.new(itunes_receipts_params)
 
     if @itunes_receipt.save
       render json: @itunes_receipt, status: :created
     else
       render json: @itunes_receipt.errors, status: :unprocessable_entity
     end
+  end
+
+  def itunes_receipts_params
+    params.require(:itunes_receipt).permit(:receipt)
   end
 
 end
