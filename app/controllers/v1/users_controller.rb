@@ -103,7 +103,7 @@ class V1::UsersController < V1::BaseController
     if @user.update_with_password(password_params)
       render json: @user, status: :ok
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: { error: @user.errors }, status: :unprocessable_entity
     end
   end
 
