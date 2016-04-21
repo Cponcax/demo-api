@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable,# :async,#:registerable,
-         :recoverable, :rememberable, :trackable #, :validatable
+         :recoverable, :rememberable, :registerable, :trackable, :validatable
 
   # country
   belongs_to :country
@@ -28,12 +28,17 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   
   validates :first_name, :last_name, :email, presence: true
+
+  #validates :email, uniqueness: true
+  
+  #validates_uniqueness_of :email, :on => :create
+
   validates :password, presence: true,  length: { in: 6..20 }, on: :create
 
   validates :bio, length: { maximum: 255 }
 
-  validates :email, format: { with: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i, error: :bad_format },
-                 uniqueness: { case_sensitive: false }
+  validates :email, format: { with: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i },
+                 uniqueness: true
 
   enumerize :gender, :in => [:male, :female], default: :female, scope: :having_gender
   enumerize :status, in: [:active, :inactive, :banned], default: :active, scope: :having_account_status, predicates: true

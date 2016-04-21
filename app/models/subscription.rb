@@ -9,14 +9,13 @@ class Subscription < ActiveRecord::Base
     
     def status(user)
       t = Time.current
-      user.subscriptions.where("end_date < ?", t ).update_all(status: false)
+      user.subscriptions.where("end_date < ?", t ).update_all(status: false, payment: false)
       user.subscriptions.last
     end
 
     def getAccessToken(user, authorization_code)
       # authorization code from mobile sdk
       # exchange authorization code with refresh/access token
-  
       logger.info "Exchange authorization code with refresh/access token"
       tokeninfo  = ::FuturePayment.exch_token(authorization_code)
       # get access_token, refresh_token from tokeninfo. refresh_token can be exchanged with access token. See https://github.com/paypal/PayPal-Ruby-SDK#openidconnect-samples
@@ -48,18 +47,16 @@ class Subscription < ActiveRecord::Base
 
       #get access token from database
       access_token =  user.payment_tokens.last.access_token
-      
      
       # Create Payments
       logger.info "Create Future Payment"
       future_payment = FuturePayment.new(payment.merge( :token => access_token ))
       success = future_payment.create(correlation_id)
 
-    
       # check response for status
       if success
          #CREATE susbscription 
-        Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,
+        Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,"payment"=> true,
         "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
 
         logger.info "future payment successfully created"
@@ -92,24 +89,24 @@ class Subscription < ActiveRecord::Base
 
       access_token = tokeninfo.access_token
 
-
       # Create Payments
-      #if user.subscriptions.last.cancelled == false  && user.subscriptions.last.status == true 
-
       logger.info "Create Future Payment"
       future_payment = FuturePayment.new(payment.merge( :token => access_token ))
       success = future_payment.create(correlation_id)
 
       logger.info "USUARIO QUE COMPRA"
-        puts "USER::::::" + future_payment.payer.payer_info.email.inspect
-      
-        puts "USER::::::" + future_payment.transactions.inspect
+
+      puts "USER-EMAIL::::::" + future_payment.payer.payer_info.email.inspect
+    
+      info_user_pay = future_payment.transactions[0].inspect
+
+      puts "USER_PAYMENT::::::" + info_user_pay.inspect
     
 
       # check response for status
       if success
         #CREATE susbscription 
-        Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,
+        Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false, "payment"=> true,
         "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
 
         logger.info "future payment successfully created"
@@ -117,11 +114,7 @@ class Subscription < ActiveRecord::Base
       else
         logger.info "future payment creation failed"
       end
-       
-      # else
-      #   logger.info "You already have a subscription"
-      #   user.subscriptions.last.destroy
-      # end
+  
     end
 
 

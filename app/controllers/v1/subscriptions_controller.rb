@@ -20,17 +20,23 @@ class V1::SubscriptionsController < V1::BaseController
 
   def payment
     puts "metadata_id::: " + params[:metadata_id]
+    
     user = current_resource_owner
-
-    if user.subscriptions.present? == false
-    @result = Subscription.firstMakePayment(current_resource_owner, params[:metadata_id])
-
-    else
+    
+    if user.subscriptions.present? == false || user.subscriptions.last.cancelled == true 
+      puts " PRIMERA SUBCRIPTIONS::::::"
+      @result = Subscription.firstMakePayment(current_resource_owner, params[:metadata_id])
+    elsif user.subscriptions.last.payment == false 
+      puts "RECURRENTE PAGO  SUB::::"
       @result = Subscription.recurringPayment(current_resource_owner, params[:metadata_id])
+    else
+     puts "YA TIENES SUBCRIPTIONS:::::::"
     end
 
     if @result
       render json: { message: "Ok" }, status: :ok
+    elsif @result.present? == false
+     render json: {message: "you already have a subscriptions"}, status: :unprocessable_entity
     else
       render json: { error: "Fail" }, status: :unprocessable_entity
     end
@@ -77,6 +83,6 @@ class V1::SubscriptionsController < V1::BaseController
     end
 
     def subscription_params
-      params.require(:subscription).permit(:start_date, :end_date,:transaction_id, :identifier, :cancelled)
+      params.require(:subscription).permit(:start_date, :end_date,:transaction_id, :identifier, :cancelled, :payment)
     end
 end

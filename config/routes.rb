@@ -31,8 +31,10 @@ Rails.application.routes.draw do
         delete 'me',       to: 'users#destroy'
 
         put 'update_password'
+
       end
     end
+
 
     resources :countries,  only: [:index, :show ]
 
