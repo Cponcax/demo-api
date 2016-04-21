@@ -39,10 +39,12 @@ class V1::UsersController < V1::BaseController
   }'
   def create
     @user = User.new(user_params)
-
+    puts "USER" + @user.inspect
     if @user.save
+      puts "User save success:::" + @user.inspect
       render json: @user, status: :created
     else
+       puts "user fail:::" + @user.errors.inspect
       render json: @user.errors, status: :unprocessable_entity
     end
 
@@ -105,7 +107,7 @@ class V1::UsersController < V1::BaseController
     end
   end
 
-  private
+private
 
     def set_user
       @user = current_resource_owner

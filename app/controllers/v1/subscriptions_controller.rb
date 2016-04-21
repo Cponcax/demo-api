@@ -4,9 +4,9 @@ class V1::SubscriptionsController < V1::BaseController
 
   #methods to payment
   def authorize
-    user = current_resource_owner
-    token = user.access_tokens
-    puts "USER" + token.inspect
+    # user = current_resource_owner
+    # token = user.access_tokens
+    # puts "USER" + token.inspect
     #puts "RECUESS" + request.headers.inspect
     puts "CODE:::: "  + params[:authorization_code]
     @result = Subscription.getAccessToken(current_resource_owner, params[:authorization_code])
@@ -20,17 +20,23 @@ class V1::SubscriptionsController < V1::BaseController
 
   def payment
     puts "metadata_id::: " + params[:metadata_id]
+    
     user = current_resource_owner
-
-    if user.subscriptions.present? == false
-    @result = Subscription.firstMakePayment(current_resource_owner, params[:metadata_id])
-
+    
+    if user.subscriptions.present? == false || user.subscriptions.last.cancelled == true 
+      puts " PRIMERA SUBCRIPTIONS::::::"
+      @result = Subscription.firstMakePayment(current_resource_owner, params[:metadata_id])
+    elsif user.subscriptions.last.payment == false 
+      puts "RECURRENTE PAGO  SUB::::"
+      @result = Subscription.recurringPayment(current_resource_owner, params[:metadata_id])
     else
-      @result = Subscription.makePayment(current_resource_owner, params[:metadata_id])
+     puts "YA TIENES SUBCRIPTIONS:::::::"
     end
 
     if @result
       render json: { message: "Ok" }, status: :ok
+    elsif @result.present? == false
+     render json: {message: "you already have a subscriptions"}, status: :unprocessable_entity
     else
       render json: { error: "Fail" }, status: :unprocessable_entity
     end
@@ -38,13 +44,16 @@ class V1::SubscriptionsController < V1::BaseController
 
   def status
     if params[:dummy]
-      
-    render json: {}, status: :ok 
-    
-   else
-    @payment = Subscription.status(current_resource_owner)
-    render json: @payment
-   end
+      render json: {}, status: :ok 
+    else
+      @payment = Subscription.status(current_resource_owner)
+
+      if @payment.present? == false
+        render json: {message: "you do not have subscriptions"}, status: :unprocessable_entity
+      else
+        render json: @payment, status: :ok, root: false
+      end
+    end
   end
 
   def cancel
@@ -77,6 +86,6 @@ class V1::SubscriptionsController < V1::BaseController
     end
 
     def subscription_params
-      params.require(:subscription).permit(:start_date, :end_date,:transaction_id, :identifier, :cancelled)
+      params.require(:subscription).permit(:start_date, :end_date,:transaction_id, :identifier, :cancelled, :payment)
     end
 end
