@@ -5,8 +5,11 @@ class User < ActiveRecord::Base
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
+  # devise :database_authenticatable,# :async,#:registerable,
+  #        :recoverable, :rememberable, :registerable, :trackable, :validatable
+
   devise :database_authenticatable,# :async,#:registerable,
-         :recoverable, :rememberable, :registerable, :trackable, :validatable
+        :recoverable, :rememberable, :trackable #, :validatable
 
   # country
   belongs_to :country
