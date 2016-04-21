@@ -20,13 +20,13 @@ class V1::SubscriptionsController < V1::BaseController
 
   def payment
     puts "metadata_id::: " + params[:metadata_id]
-    
+
     user = current_resource_owner
-    
-    if user.subscriptions.present? == false || user.subscriptions.last.cancelled == true 
+
+    if user.subscriptions.present? == false || user.subscriptions.last.cancelled == true
       puts " PRIMERA SUBCRIPTIONS::::::"
       @result = Subscription.firstMakePayment(current_resource_owner, params[:metadata_id])
-    elsif user.subscriptions.last.payment == false 
+    elsif user.subscriptions.last.payment == false
       puts "RECURRENTE PAGO  SUB::::"
       @result = Subscription.recurringPayment(current_resource_owner, params[:metadata_id])
     else
@@ -44,7 +44,7 @@ class V1::SubscriptionsController < V1::BaseController
 
   def status
     if params[:dummy]
-      render json: {}, status: :ok 
+      render json: {"cancelled": false, "status": true}, status: :ok 
     else
       @payment = Subscription.status(current_resource_owner)
 
@@ -59,9 +59,9 @@ class V1::SubscriptionsController < V1::BaseController
   def cancel
     puts "ENTRASTE"
     @cancel = Subscription.cancel(current_resource_owner)
-     
+
      puts "RESPUESTA" + @cancel.inspect
-    if @cancel 
+    if @cancel
       render json: {message: "Delete"}, status: :ok
     else
       render json: {error: "Fail"}, status: :unprocessable_entity
@@ -70,10 +70,10 @@ class V1::SubscriptionsController < V1::BaseController
 
   #method for save supcription to Iphone
   def sync
-    @sym = Subscription.PaymentIos(current_resource_owner, params[:start_date], 
+    @sym = Subscription.PaymentIos(current_resource_owner, params[:start_date],
       params[:end_date], params[:transaction_id], params[:identifier], params[:cancelled])
 
-    if @sym 
+    if @sym
       render json: {message: "OK"}, status: :ok
     else
       render json: {error: "Fail"}, status: :unprocessable_entity
