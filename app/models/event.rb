@@ -7,10 +7,10 @@ class Event < ActiveRecord::Base
 
 
   def self.hour
-    t = Time.current.utc
+    t = Time.now
 
     #where("? BETWEEN start_time AND end_time", t )
-    where("start_time <=? AND end_time >=?", t, t )
+    where("start_time <=? AND end_time <=?", t, t )
   end
 
 
