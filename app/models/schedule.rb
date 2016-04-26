@@ -8,7 +8,6 @@ class Schedule < ActiveRecord::Base
  
  def self.get_day
   t = Time.now
- #t = Time.utc(Time, 1, 1)
   find_by("date =?", t)
  end
 
