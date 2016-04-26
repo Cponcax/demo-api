@@ -123,7 +123,7 @@ class Subscription < ActiveRecord::Base
         access_token = user.payment_tokens
         access_token.destroy_all
       else
-        user.subscriptions.last.update(cancelled: true)
+        user.subscriptions.last.update(status: false, cancelled: true)
         access_token = user.payment_tokens
         access_token.destroy_all
       end
