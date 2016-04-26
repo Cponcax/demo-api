@@ -7,14 +7,10 @@ class Event < ActiveRecord::Base
 
 
   def self.hour
-  
     t = Time.utc(2001, 1, 1, Time.current.hour, Time.current.min, Time.current.sec)
 
-    where("? BETWEEN start_time AND end_time", t )
-  
-    
-
+    e = Schedule.get_day.events
+    e.where("? BETWEEN start_time AND end_time", t )
   end
-
 
 end
