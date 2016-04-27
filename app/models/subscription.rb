@@ -25,7 +25,7 @@ class Subscription < ActiveRecord::Base
       # more attribute available in tokeninfo
       logger.info "INFORMATION TOKEN HASH"
 
-      payment_token =  user.payment_tokens.create!("token_type" => tokeninfo.token_type, 
+      payment_token =  user.payment_tokens.create("token_type" => tokeninfo.token_type, 
       "expires_in" => tokeninfo.expires_in, "expires_in" => tokeninfo.expires_in,
       "refresh_token" => tokeninfo.refresh_token, "access_token" => access_token )
      
@@ -59,9 +59,9 @@ class Subscription < ActiveRecord::Base
       # check response for status
       if success
          #CREATE susbscription 
-        Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,"payment"=> true,
+        Subscription.create("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,"payment"=> true,
         "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
-
+        
         logger.info "future payment successfully created"
         
       else
@@ -109,7 +109,7 @@ class Subscription < ActiveRecord::Base
       # check response for status
       if success
         #CREATE susbscription 
-        Subscription.create!("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false, "payment"=> true,
+        Subscription.create("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false, "payment"=> true,
         "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
 
         logger.info "future payment successfully created"
@@ -134,7 +134,7 @@ class Subscription < ActiveRecord::Base
 
     #for IOS devise
     def PaymentIos(user ,start_date,end_date, transaction_id, identifier, cancelled)
-      payment = user.subscriptions.create!("start_date" => start_date, "end_date"=> end_date,
+      payment = user.subscriptions.create("start_date" => start_date, "end_date"=> end_date,
         "transaction_id" => transaction_id, "identifier" => identifier, "cancelled"=> cancelled)
     end
 

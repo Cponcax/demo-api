@@ -44,17 +44,16 @@ class V1::SubscriptionsController < V1::BaseController
   end
 
   def status
-    if params[:dummy]
-      render json: {"cancelled": false, "status": true}, status: :ok 
-    else
-      @payment = Subscription.status(current_resource_owner)
+  
+  @subscription = Subscription.status(current_resource_owner)
 
-      if @payment.present? == false
-        render json: {message: "you do not have subscriptions"}, status: :unprocessable_entity
-      else
-        render json: @payment, status: :ok, root: false
-      end
-    end
+  if @subscription.present? == false
+    puts"NO TIENES SUB:::" + @subscription.inspect
+    render json: {message: "you do not have subscriptions"}, status: :unprocessable_entity
+  else
+    puts "TIENES SUB" + @subscription.inspect
+    render json: {cancelled: @subscription.cancelled, status: @subscription.status}, status: :ok, root: false
+  end
   end
 
   def cancel

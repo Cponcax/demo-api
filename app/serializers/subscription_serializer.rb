@@ -1,5 +1,5 @@
 class SubscriptionSerializer < ActiveModel::Serializer
-  attributes :id, :cancelled, :status
+  attributes :cancelled, :status
   
 
 end
