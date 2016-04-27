@@ -30,7 +30,12 @@ class Event < ActiveRecord::Base
     #     t >= st && t < et
     # }
 
+    puts "TIME CURRENT::" + Time.current.inspect
 
+    puts"==============" 
+
+    puts "UTC TIME CURRENT:: "+ Time.current.utc.inspect
+    
     t = Time.current.utc.to_time_of_day
 
     events = Schedule.get_day.events rescue []
