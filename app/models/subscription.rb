@@ -47,12 +47,15 @@ class Subscription < ActiveRecord::Base
 
       #get access token from database
       access_token =  user.payment_tokens.last.access_token
-     
+      
+
       # Create Payments
       logger.info "Create Future Payment"
       future_payment = FuturePayment.new(payment.merge( :token => access_token ))
       success = future_payment.create(correlation_id)
-
+      
+      logger.info "FUTURE PAYMENT:::" + future_payment.inspect
+      #binding.pry
       # check response for status
       if success
          #CREATE susbscription 
@@ -123,7 +126,7 @@ class Subscription < ActiveRecord::Base
         access_token = user.payment_tokens
         access_token.destroy_all
       else
-        user.subscriptions.last.update(cancelled: true)
+        user.subscriptions.last.update(status: false, cancelled: true)
         access_token = user.payment_tokens
         access_token.destroy_all
       end

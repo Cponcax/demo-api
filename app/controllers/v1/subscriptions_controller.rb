@@ -32,6 +32,7 @@ class V1::SubscriptionsController < V1::BaseController
     else
      puts "YA TIENES SUBCRIPTIONS:::::::"
     end
+    puts "RESULT:::" + @result.inspect
 
     if @result
       render json: { message: "Ok" }, status: :ok

@@ -28,7 +28,7 @@ class  V1::ShowsController < V1::BaseController
     }
   '
   def shows_live
-    @shows = Show.get_show
+    @shows = Show.show_live
     render json: @shows
   end
 
