@@ -9,11 +9,24 @@ class Schedule < ActiveRecord::Base
  def self.get_day
   Time.zone = "Central America"
 
-  t = Time.current.in_time_zone
+  t = Date.current.in_time_zone
 
   puts "TIEMPO WITH TIME ZONE::" + t.inspect
 
-  find_by("date =?", t)
+  find_by("date =?", t) 
+
+
+  # select {|s|
+
+  #     puts "DATE :: " + s.date.inspect
+
+  #     puts "VERSION LOCAL::" + s.date.in_time_zone.inspect
+
+  #   s.date.in_time_zone == t 
+
+  # }
+
  end
 
 end
+  
