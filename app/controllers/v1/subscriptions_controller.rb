@@ -47,13 +47,16 @@ class V1::SubscriptionsController < V1::BaseController
   
   @subscription = Subscription.status(current_resource_owner)
 
-  if @subscription.present? == false
-    puts"NO TIENES SUB:::" + @subscription.inspect
-    render json: {message: "you do not have subscriptions"}, status: :unprocessable_entity
-  else
-    puts "TIENES SUB" + @subscription.inspect
-    render json: {cancelled: @subscription.cancelled, status: @subscription.status}, status: :ok, root: false
-  end
+    if @subscription.present? == false
+      puts"NO TIENES SUB:::" + @subscription.inspect
+      render json: {message: "you do not have subscriptions"}, status: :unprocessable_entity
+    else
+      t = Time.current
+      status = !(@subscription.end_date < t)
+      #binding.pry
+      puts "TIENES SUB" + @subscription.inspect
+      render json: {cancelled: @subscription.cancelled, status: status}, status: :ok, root: false
+    end
   end
 
   def cancel

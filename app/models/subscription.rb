@@ -9,7 +9,7 @@ class Subscription < ActiveRecord::Base
     
     def status(user)
       t = Time.current
-      user.subscriptions.where("end_date < ?", t ).update_all(status: false, payment: false)
+     # user.subscriptions.where("end_date < ?", t ).update_all(status: false, payment: false)
       user.subscriptions.last
     end
 
@@ -126,7 +126,7 @@ class Subscription < ActiveRecord::Base
         access_token = user.payment_tokens
         access_token.destroy_all
       else
-        user.subscriptions.last.update(status: false, cancelled: true)
+        user.subscriptions.last.update(cancelled: true)
         access_token = user.payment_tokens
         access_token.destroy_all
       end
