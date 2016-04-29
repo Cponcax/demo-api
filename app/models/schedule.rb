@@ -8,7 +8,7 @@ class Schedule < ActiveRecord::Base
  
  
   def self.get_schedules_per_day
-    Time.zone = "Central America"
+    #Time.zone = "Central America"
 
     t = Date.current.in_time_zone
 
