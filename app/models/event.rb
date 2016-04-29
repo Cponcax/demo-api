@@ -28,13 +28,15 @@ class Event < ActiveRecord::Base
   show_live.select{ |e| 
     begin
       st = e.start_time.to_time_of_day 
-      puts "ST::" + st.inspect
-      et = e.end_time.to_time_of_day 
-      puts "ET::" + et.inspect
-      Tod::Shift.new(st, et).include?(t)
+    puts "ST::" + st.inspect
+    et = e.end_time.to_time_of_day 
+    puts "ET::" + et.inspect
+    Tod::Shift.new(st, et).include?(t)
     rescue Exception => e
       
     end
+    
+ 
   } 
    
   end
