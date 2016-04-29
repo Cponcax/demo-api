@@ -52,7 +52,8 @@ class V1::SubscriptionsController < V1::BaseController
       render json: {message: "you do not have subscriptions"}, status: :unprocessable_entity
     else
       t = Date.current
-      status = (@subscription.end_date <= t)
+      dates = (@subscription.start_date..@subscription.end_date).to_a
+      status = dates.include? t 
       #binding.pry
       puts "TIENES SUB" + @subscription.inspect
       render json: {cancelled: @subscription.cancelled, status: status}, status: :ok, root: false
