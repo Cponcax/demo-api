@@ -7,14 +7,14 @@ class Schedule < ActiveRecord::Base
 
  
  
-  def self.get_schedules_per_day
-    #Time.zone = "Central America"
+  def self.get_day
+    Time.zone = "Central America"
 
     t = Date.current.in_time_zone
 
     puts "TIEMPO WITH TIME ZONE::" + t.inspect
     
-    where("date =?", t) 
+    find_by("date =?", t) 
     
     # select {|s|
     #     puts "DATE :: " + s.date.inspect
