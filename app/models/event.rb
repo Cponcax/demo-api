@@ -10,7 +10,7 @@ class Event < ActiveRecord::Base
 
 
   def self.get_show_live
-   #Time.zone = "Central America"
+   Time.zone = "Central America"
     
    #  t = Time.utc(2001, 1, 1, Time.current.hour, Time.current.min, Time.current.sec)
    #  e = Schedule.get_day.events
@@ -29,22 +29,21 @@ class Event < ActiveRecord::Base
         
    #      t >= st && t < et
    #  }
-  puts "TIME CURRENT::" + Time.current.inspect
-
-  puts"==============" 
-
-  puts "UTC TIME CURRENT:: "+ Time.current.utc.inspect
-
+ 
   
   t = Time.current.utc.to_time_of_day
-  puts "TIME::" + t.inspect
-   events = Schedule.get_day.events rescue []
-   puts "EVENT" + events.inspect
+    puts "TIME::" + t.inspect
+  
+    events = Schedule.get_day.map {|s| 
+      s.events
+    }.flatten
+ 
     events.select { |event| 
+
      st = event.start_time.to_time_of_day
-     puts "ST::" + st.inspect
+     
      et = event.end_time.to_time_of_day
-      puts "ET" + et.inspect
+      
        Tod::Shift.new(st, et).include?(t)
      }
 

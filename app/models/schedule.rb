@@ -6,21 +6,12 @@ class Schedule < ActiveRecord::Base
   validates :channel_id, :date, :name, :turn, presence: true
 
  
- 
   def self.get_day
     Time.zone = "Central America"
 
     t = Date.current.in_time_zone
-
-    puts "TIEMPO WITH TIME ZONE::" + t.inspect
     
-    find_by("date =?", t) 
-    
-    # select {|s|
-    #     puts "DATE :: " + s.date.inspect
-    #     puts "VERSION LOCAL::" + s.date.in_time_zone.inspect
-    #   s.date.in_time_zone == t 
-    # }
+    where("date =?", t) 
 
   end
 
