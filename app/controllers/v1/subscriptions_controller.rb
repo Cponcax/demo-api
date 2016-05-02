@@ -26,22 +26,23 @@ class V1::SubscriptionsController < V1::BaseController
     if user.subscriptions.present? == false || user.subscriptions.last.cancelled == true
       puts " PRIMERA SUBCRIPTIONS::::::"
       @result = Subscription.firstMakePayment(current_resource_owner, params[:metadata_id])
-    elsif user.subscriptions.last.payment == false
+    elsif  user.subscriptions.last.cancelled  == false
       puts "RECURRENTE PAGO  SUB::::"
       @result = Subscription.recurringPayment(current_resource_owner, params[:metadata_id])
     else
      puts "YA TIENES SUBCRIPTIONS:::::::"
     end
     puts "RESULT:::" + @result.inspect
-
-    if @result
+    #binding.pry
+    if @result.error.nil?
       render json: { message: "Ok" }, status: :ok
     elsif @result.present? == false
      render json: {message: "you already have a subscriptions"}, status: :unprocessable_entity
-    else
-      render json: { error: "Fail" }, status: :unprocessable_entity
+    else @result.error.name == "TRANSACTION_REFUSED"
+      render json: { error: "Fail" }, status: 400
     end
   end
+
 
   def status
   
@@ -50,11 +51,13 @@ class V1::SubscriptionsController < V1::BaseController
     if @subscription.present? == false
       puts"NO TIENES SUB:::" + @subscription.inspect
       render json: {message: "you do not have subscriptions"}, status: :unprocessable_entity
-    else
+    elsif @subscription.cancelled? == false
       t = Date.current
-      dates = (@subscription.start_date..@subscription.end_date).to_a
+
+      dates = (@subscription.start_date.to_date..@subscription.end_date.to_date).to_a
+
       status = dates.include? t 
-      #binding.pry
+
       puts "TIENES SUB" + @subscription.inspect
       render json: {cancelled: @subscription.cancelled, status: status}, status: :ok, root: false
     end
