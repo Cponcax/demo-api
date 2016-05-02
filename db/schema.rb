@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160419155006) do
+ActiveRecord::Schema.define(version: 20160602200405) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,9 +20,15 @@ ActiveRecord::Schema.define(version: 20160419155006) do
     t.string   "name"
     t.integer  "position"
     t.string   "streaming_url"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
     t.string   "logo_color"
+    t.string   "logo_file_name"
+    t.string   "logo_content_type"
+    t.integer  "logo_file_size"
+    t.datetime "logo_updated_at"
+    t.string   "access_token"
+    t.boolean  "logo_processing"
   end
 
   create_table "countries", force: :cascade do |t|
@@ -123,6 +129,17 @@ ActiveRecord::Schema.define(version: 20160419155006) do
   add_index "reminders", ["schedule_id"], name: "index_reminders_on_schedule_id", using: :btree
   add_index "reminders", ["user_id"], name: "index_reminders_on_user_id", using: :btree
 
+  create_table "roles", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "resource_id"
+    t.string   "resource_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
+  add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
+
   create_table "schedules", force: :cascade do |t|
     t.integer  "channel_id"
     t.date     "date"
@@ -136,18 +153,28 @@ ActiveRecord::Schema.define(version: 20160419155006) do
 
   create_table "shows", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
     t.string   "rating"
+    t.string   "logo_file_name"
+    t.string   "logo_content_type"
+    t.integer  "logo_file_size"
+    t.datetime "logo_updated_at"
+    t.string   "cover_file_name"
+    t.string   "cover_content_type"
+    t.integer  "cover_file_size"
+    t.datetime "cover_updated_at"
+    t.boolean  "logo_processing"
+    t.boolean  "cover_processing"
   end
 
   create_table "subscriptions", force: :cascade do |t|
-    t.date     "start_date"
-    t.date     "end_date"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.integer  "user_id"
-    t.boolean  "cancelled"
+    t.boolean  "cancelled",      default: false
     t.string   "transaction_id"
     t.string   "identifier"
     t.boolean  "payment"
@@ -185,15 +212,33 @@ ActiveRecord::Schema.define(version: 20160419155006) do
     t.integer  "country_id"
     t.datetime "deleted_at"
     t.string   "status"
+    t.string   "invitation_token"
+    t.datetime "invitation_created_at"
+    t.datetime "invitation_sent_at"
+    t.datetime "invitation_accepted_at"
+    t.integer  "invitation_limit"
+    t.integer  "invited_by_id"
+    t.string   "invited_by_type"
+    t.integer  "invitations_count",                 default: 0
   end
 
   add_index "users", ["country_id"], name: "index_users_on_country_id", using: :btree
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["first_name"], name: "index_users_on_first_name", using: :btree
+  add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
+  add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
+  add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
   add_index "users", ["last_name"], name: "index_users_on_last_name", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", using: :btree
+
+  create_table "users_roles", id: false, force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "role_id"
+  end
+
+  add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
 
   add_foreign_key "itunes_receipts", "users"
   add_foreign_key "payment_tokens", "users"

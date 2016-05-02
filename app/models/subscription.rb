@@ -25,9 +25,12 @@ class Subscription < ActiveRecord::Base
       # more attribute available in tokeninfo
       logger.info "INFORMATION TOKEN HASH"
 
-      payment_token =  user.payment_tokens.create("token_type" => tokeninfo.token_type, 
-      "expires_in" => tokeninfo.expires_in, "expires_in" => tokeninfo.expires_in,
-      "refresh_token" => tokeninfo.refresh_token, "access_token" => access_token )
+      payment_token =  user.payment_tokens.create(
+        "token_type" => tokeninfo.token_type, 
+        "expires_in" => tokeninfo.expires_in, 
+        "refresh_token" => tokeninfo.refresh_token, 
+        "access_token" => access_token 
+        )
      
     end
 
@@ -55,17 +58,21 @@ class Subscription < ActiveRecord::Base
       success = future_payment.create(correlation_id)
       
       logger.info "FUTURE PAYMENT:::" + future_payment.inspect
-      #binding.pry
+     
       # check response for status
       if success
          #CREATE susbscription 
-        Subscription.create("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false,"payment"=> true,
-        "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
+        Subscription.create(
+          "user_id" => user.payment_tokens.last.user_id, 
+          "start_date" => user.payment_tokens.last.created_at, 
+          "end_date" => user.payment_tokens.last.created_at + 30.days
+          )
         
         logger.info "future payment successfully created"
-        
+        return future_payment
       else
         logger.info "future payment creation failed"
+        return future_payment
       end
     end
 
@@ -89,7 +96,6 @@ class Subscription < ActiveRecord::Base
       puts "TOKEN-INFO-REFRESH::::::" + tokeninfo.inspect
 
       #get access token from database
-
       access_token = tokeninfo.access_token
 
       # Create Payments
@@ -109,13 +115,18 @@ class Subscription < ActiveRecord::Base
       # check response for status
       if success
         #CREATE susbscription 
-        Subscription.create("user_id" => user.payment_tokens.last.user_id, "cancelled"=> false, "payment"=> true,
-        "start_date" => user.payment_tokens.last.created_at, "end_date" => user.payment_tokens.last.created_at + 30.days, "status" => true)
+        Subscription.create(
+          "user_id" => user.payment_tokens.last.user_id,
+          "start_date" => user.payment_tokens.last.created_at, 
+          "end_date" => user.payment_tokens.last.created_at + 30.days
+          )
 
         logger.info "future payment successfully created"
-        user.subscriptions.last.update!("payment" => true)
+       # user.subscriptions.last.update!("payment" => true)
+        return future_payment
       else
         logger.info "future payment creation failed"
+         return future_payment
       end
   
     end
