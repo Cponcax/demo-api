@@ -24,13 +24,13 @@ class V1::SubscriptionsController < V1::BaseController
     user = current_resource_owner
 
     if user.subscriptions.present? == false || user.subscriptions.last.cancelled == true
-      puts " PRIMERA SUBCRIPTIONS::::::"
+      puts " PRIMERA SUBCRIPTIONS::"
       @result = Subscription.firstMakePayment(current_resource_owner, params[:metadata_id])
     elsif  user.subscriptions.last.cancelled  == false
-      puts "RECURRENTE PAGO  SUB::::"
+      puts "RECURRENTE PAGO  SUB::"
       @result = Subscription.recurringPayment(current_resource_owner, params[:metadata_id])
     else
-     puts "YA TIENES SUBCRIPTIONS:::::::"
+     puts "YA TIENES SUBCRIPTIONS::"
     end
     puts "RESULT:::" + @result.inspect
     #binding.pry
@@ -45,29 +45,29 @@ class V1::SubscriptionsController < V1::BaseController
 
 
   def status
-  
-  @subscription = Subscription.status(current_resource_owner)
+    @subscription = Subscription.status(current_resource_owner)
 
     if @subscription.present? == false
-      puts"NO TIENES SUB:::" + @subscription.inspect
+      puts"NO TIENES SUB::" + @subscription.inspect
       render json: {message: "you do not have subscriptions"}, status: :unprocessable_entity
-    elsif @subscription.cancelled? == false
+
+    else
       t = Date.current
 
       dates = (@subscription.start_date.to_date..@subscription.end_date.to_date).to_a
 
       status = dates.include? t 
 
-      puts "TIENES SUB" + @subscription.inspect
+      puts "TIENES SUB::" + @subscription.inspect
       render json: {cancelled: @subscription.cancelled, status: status}, status: :ok, root: false
     end
   end
 
   def cancel
-    puts "ENTRASTE"
+    puts "ENTRASTE ACCION CANCEL:::"
     @cancel = Subscription.cancel(current_resource_owner)
 
-     puts "RESPUESTA" + @cancel.inspect
+     puts "@CANCEL::" + @cancel.inspect
     if @cancel
       render json: {message: "Delete"}, status: :ok
     else
