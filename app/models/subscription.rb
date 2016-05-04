@@ -62,10 +62,11 @@ class Subscription < ActiveRecord::Base
       # check response for status
       if success
          #CREATE susbscription 
-        Subscription.create(
-          "user_id" => user.payment_tokens.last.user_id, 
-          "start_date" => user.payment_tokens.last.created_at, 
-          "end_date" => user.payment_tokens.last.created_at + 30.days
+        user.subscriptions.create(
+          "user_id" => user.id)
+        user.subscriptions.last.update(
+          "start_date" => user.subscriptions.last.created_at, 
+          "end_date" => user.subscriptions.last.created_at + 31.days
           )
         
         logger.info "future payment successfully created"
@@ -115,10 +116,11 @@ class Subscription < ActiveRecord::Base
       # check response for status
       if success
         #CREATE susbscription 
-        Subscription.create(
-          "user_id" => user.payment_tokens.last.user_id,
-          "start_date" => user.payment_tokens.last.created_at, 
-          "end_date" => user.payment_tokens.last.created_at + 30.days
+        user.subscriptions.create(
+          "user_id" => user.id)
+        user.subscriptions.last.update(
+          "start_date" => user.subscriptions.last.created_at, 
+          "end_date" => user.subscriptions.last.created_at + 31.days
           )
 
         logger.info "future payment successfully created"
