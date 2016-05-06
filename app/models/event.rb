@@ -19,7 +19,7 @@ class Event < ActiveRecord::Base
     t = Time.current.utc.to_time_of_day
     puts "TIME::" + t.inspect
   
-    events = Schedule.get_days.map {|s| 
+    events = Schedule.get_day.map {|s| 
       s.events
     }.flatten
  
