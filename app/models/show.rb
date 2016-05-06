@@ -18,7 +18,7 @@ class Show < ActiveRecord::Base
     :default_url => lambda { |attachment| attachment.instance.default_url },
     url: '/system/:class/:attachment/:id/:basename_:style.:extension'
 
-  def self.show_live
+  def self.show_live(country)
     Event.get_show_live
   end
 

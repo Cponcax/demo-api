@@ -28,6 +28,12 @@ class  V1::ShowsController < V1::BaseController
     }
   '
   def shows_live
+    ip_address = request.remote_ip
+    
+    puts "REMOTE_IP::" + ip_address.inspect
+
+    country = GeoIP.new('lib/geoip/GeoIP.dat').country(ip_address)
+
     @shows = Show.show_live
     render json: @shows
   end
@@ -42,3 +48,4 @@ class  V1::ShowsController < V1::BaseController
       params.require(:show).permit(:name, :rating)
     end
 end
+
