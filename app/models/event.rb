@@ -13,13 +13,13 @@ class Event < ActiveRecord::Base
 
 
 
-  def self.get_show_live
+  def self.get_show_live(country)
     Time.zone = "Central America"
     
     t = Time.current.utc.to_time_of_day
     puts "TIME::" + t.inspect
   
-    events = Schedule.get_day.map {|s| 
+    events = Schedule.get_days.map {|s| 
       s.events
     }.flatten
  
@@ -29,7 +29,7 @@ class Event < ActiveRecord::Base
 
       et = event.end_time.to_time_of_day
 
-      Tod::Shift.new(st, et).include?(t)
+      Tod::Shift.new(st, et).include?(t) && event.countries.include?(country)
      }
 
   end

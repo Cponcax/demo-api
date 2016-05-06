@@ -18,18 +18,12 @@ class Show < ActiveRecord::Base
     :default_url => lambda { |attachment| attachment.instance.default_url },
     url: '/system/:class/:attachment/:id/:basename_:style.:extension'
 
-  def self.show_live(country)
-    shows_live = Event.get_show_live
+  def self.live(country)
+    puts "COUNTRY::" + country
+    c = Country.find_by(name: country)
 
-    shows_live.select {|s| 
-      s.countries.map {|c|
-        c.name.include? country
-        }
-      }
-
+    Event.get_show_live(c)
 
   end
-
-
 
 end

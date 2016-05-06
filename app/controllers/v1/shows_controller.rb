@@ -28,14 +28,15 @@ class  V1::ShowsController < V1::BaseController
     }
   '
   def shows_live
-    ip_address = request.remote_ip
-    
+    ip_address = request.remote_ip 
+ 
     puts "REMOTE_IP::" + ip_address.inspect
 
-    country = GeoIP.new('lib/geoip/GeoIP.dat').country(ip_address)
+    c = GeoIP.new('lib/geoip/GeoIP.dat').country(ip_address)
+    
+    country = c.country_code2
 
-    @shows = Show.show_live
-    render json: @shows
+    render json: Show.live(country)
   end
 
 
