@@ -3,6 +3,10 @@ require 'tod/core_extensions'
 class Event < ActiveRecord::Base
   belongs_to :schedule
   belongs_to :show
+
+  has_many :event_countries
+  has_many :countries, through: :event_countries
+
   validates :schedule, :show, :presence => true
 
   validates :start_time, :end_time, :streaming_url ,presence: true
