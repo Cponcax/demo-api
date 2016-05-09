@@ -20,7 +20,7 @@ class Show < ActiveRecord::Base
 
   def self.live(country)
     puts "COUNTRY::" + country
-    c = Country.find_by(name: country)
+    c = Country.find_by(alpha2: country)
 
     Event.get_show_live(c)
 
