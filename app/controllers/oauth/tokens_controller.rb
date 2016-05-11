@@ -1,7 +1,7 @@
 class Oauth::TokensController < Doorkeeper::TokensController
   include AbstractController::Callbacks
 
-  after_action :identify_origin, only: [:create]
+ #after_action :identify_origin, only: [:create]
 
   def create
 
