@@ -17,7 +17,6 @@ class Event < ActiveRecord::Base
     allowed_ips = [
       '190.242.161.26', #firewall tcs,
       '190.242.161.20', #ip esmitv
-      '173.194.112.35' #USA
     ]
 
     Time.zone = "Central America"

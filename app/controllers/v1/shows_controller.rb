@@ -28,10 +28,8 @@ class  V1::ShowsController < V1::BaseController
     }
   '
   def shows_live
-    ip_address = "190.242.161.20"#request.remote_ip 
+    ip_address = request.remote_ip #"190.242.161.20" 
  
-    puts "REMOTE_IP::" + ip_address.inspect
-
     c = GeoIP.new('lib/geoip/GeoIP.dat').country(ip_address)
     
     country =  c.country_code2
