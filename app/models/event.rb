@@ -13,9 +13,17 @@ class Event < ActiveRecord::Base
 
 
 
-  def self.get_show_live(country)
+  def self.get_show_live(country, ip_address)
+    allowed_ips = [
+      '190.242.161.26', #firewall tcs,
+      '190.242.161.20', #ip esmitv
+      '173.194.112.35' #USA
+    ]
+
     Time.zone = "Central America"
     
+    puts "EVENT IP ADRESS::" + ip_address.inspect
+
     t = Time.current.utc.to_time_of_day
     puts "TIME::" + t.inspect
   
@@ -29,9 +37,15 @@ class Event < ActiveRecord::Base
 
       et = event.end_time.to_time_of_day
 
-      Tod::Shift.new(st, et).include?(t) && event.countries.include?(country)
+      if allowed_ips.include? ip_address
+        Tod::Shift.new(st, et).include?(t)
+      else
+        Tod::Shift.new(st, et).include?(t) && event.countries.include?(country) 
+      end
+
      }
 
   end
 
 end
+

@@ -28,7 +28,7 @@ class  V1::ShowsController < V1::BaseController
     }
   '
   def shows_live
-    ip_address = request.remote_ip 
+    ip_address = "190.242.161.20"#request.remote_ip 
  
     puts "REMOTE_IP::" + ip_address.inspect
 
@@ -36,7 +36,7 @@ class  V1::ShowsController < V1::BaseController
     
     country =  c.country_code2
 
-    render json: Show.live(country)
+    render json: Show.live(country, ip_address)
   end
 
 
@@ -49,4 +49,5 @@ class  V1::ShowsController < V1::BaseController
       params.require(:show).permit(:name, :rating)
     end
 end
+
 
