@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
         :recoverable, :rememberable, :trackable #, :validatable
 
   # country
-  belongs_to :country
+  #belongs_to :country
 
   # access tokens from doorkeeper
 
