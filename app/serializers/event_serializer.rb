@@ -1,5 +1,7 @@
 class EventSerializer < ActiveModel::Serializer
-  attributes :id,  :channel_id, :channel_name ,:name, :cover ,:logo, :logo_channel ,:logo_color, :rating, :datetime, :streaming_url
+  attributes  :id,  :channel_id, :channel_name ,:name, :cover ,
+              :logo,  :logo_channel ,:logo_color, :rating, :datetime, 
+              :streaming_url, :streaming_wifi, :streaming_3g
 
 
   def channel_name
