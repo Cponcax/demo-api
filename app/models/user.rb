@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
         :recoverable, :rememberable, :trackable #, :validatable
 
   # country
-  #belongs_to :country
+  # belongs_to :country
 
   # access tokens from doorkeeper
 
@@ -35,10 +35,6 @@ class User < ActiveRecord::Base
 
   validates :first_name, :last_name, :email, presence: true
 
-  #validates :email, uniqueness: true
-  
-  #validates_uniqueness_of :email, :on => :create
-
   validates :password, presence: true,  length: { in: 6..20 }, on: :create
 
   validates :bio, length: { maximum: 255 }
@@ -58,11 +54,10 @@ class User < ActiveRecord::Base
   before_save { self.email = email.downcase }
 
   def alive_tokens
-    tokens.select {|token| !token.revoked? }
+    tokens.order(created_at: :asc).select {|token| !token.revoked? }
   end
 
   def create_access_token
-    puts "::::CREANDO TOKEN::::::::"
     @request ||= Doorkeeper::OAuth::PasswordAccessTokenRequest.new(
          Doorkeeper.configuration,
          nil,
@@ -71,10 +66,6 @@ class User < ActiveRecord::Base
        )
      @response = @request.authorize
      @token = @response.token
-
-     puts ":::RESPONSE :::" + @response.inspect
-
-     puts ":::TOKEN::" + @token.inspect
   end
 
   def validate_itunes_receipt
