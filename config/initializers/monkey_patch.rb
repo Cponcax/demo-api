@@ -1,25 +1,32 @@
 Rails.application.config.to_prepare do
-  Doorkeeper::OAuth::PasswordAccessTokenRequest.class_eval do
-    validate :alive_tokens , error: :limit_tokens
+  Doorkeeper::AccessTokenMixin.class_eval do
+    def generate_token
+        self.created_at ||= Time.now.utc
 
+        generator = Doorkeeper.configuration.access_token_generator.constantize
+        self.token = generator.generate(
+          resource_owner_id: resource_owner_id,
+          scopes: scopes,
+          application: application,
+          expires_in: expires_in,
+          created_at: created_at
+        )
 
-  def initialize(server, credentials, resource_owner, parameters = {})
-    @server          = server
-    @resource_owner  = resource_owner
-    @credentials     = credentials
-    @original_scopes = parameters[:scope]
+        if token
+          # User the resource_owner_id from token to identify the user
+          user = User.find(resource_owner_id) rescue nil
 
-    if credentials
-      @client = Application.by_uid_and_secret credentials.uid,
-                                              credentials.secret
+          if user && user.alive_tokens.size >= 2
+            # Revoke old token from user alive tokens
+            user.alive_tokens[0].update(revoked_at: Time.now.utc)
+          end
+        end
+        
+    rescue NoMethodError
+      raise Errors::UnableToGenerateToken, "#{generator} does not respond to `.generate`."
+    rescue NameError
+      raise Errors::TokenGeneratorNotFound, "#{generator} not found"
     end
-  end
-
-    private
-
-      def validate_alive_tokens
-        resource_owner.alive_tokens.size < 200
-      end
   end
 end
 
@@ -77,5 +84,26 @@ Rails.application.config.to_prepare do
 
         OAuth::ErrorResponse.new name: error_name, state: params[:state]
       end
+  end
+end
+
+Rails.application.config.to_prepare do
+  Doorkeeper::OAuth::TokenResponse.class_eval do
+      def body
+        # User the resource_owner_id from token to identify the user
+        user = User.find(token.resource_owner_id) rescue nil
+
+        {
+          'access_token'  => token.token,
+          'testtt'  => "sdadasdas",
+          'token_type'    => token.token_type,
+          'expires_in'    => token.expires_in_seconds,
+          'refresh_token' => token.refresh_token,
+          'scope'         => token.scopes_string,
+          'created_at'    => token.created_at.to_i,
+          'user'          => (Hash["first_name", user.first_name, "last_name", user.last_name, "email", user.email] rescue {})
+        }.reject { |_, value| value.blank? }
+      end
+
   end
 end
