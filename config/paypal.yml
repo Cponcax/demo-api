@@ -11,7 +11,7 @@ test: &default
 
   # Credentials for Classic APIs
   app_id: APP-80W284485P519543T
-  username: play-facilitator_api1.503estudio.com
+  username: play-facilitator@503estudio.com #play-facilitator_api1.503estudio.com 
   password: GJKDZNAKA6XCM4WU
   signature: AFcWxV21C7fd0v3bYYYRCpSSRl31AOHv7TkRIsgZHonFEm8-PQvl3rv5
   # # With Certificate
