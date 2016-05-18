@@ -1,22 +1,22 @@
 test: &default
 
   # Credentials for REST APIs
-  client_id:
+  client_id: AfaeH_hMf9YQ9IU8mNVgAPeJfn1mzEryay37ytlWdsckzNY-zGavit2nM7NBNb-kjlEH87CZWwrAoPaA
   #EBWKjlELKMYqRNQ6sYvFo64FtaRLRR5BdHEESmha49TM
-  client_secret: 
+  client_secret: EBTxEHLIkopDPbnJSrqGbdyrkhW2fPdV8Q1m0V1LAeKlF69iwSoOVcdgZE2Se-Ilh4YEkaw1g8r-tU4u
   #EO422dn3gQLgDbuwqTjzrFgFtaRLRR5BdHEESmha49TM
 
   # Mode can be 'live' or 'sandbox'
-  mode:
+  mode: sandbox
 
   # Credentials for Classic APIs
-  app_id:
-  username: 
-  password: 
-  signature: 
+  app_id: APP-80W284485P519543T
+  username: play-facilitator_api1.503estudio.com
+  password: GJKDZNAKA6XCM4WU
+  signature: AFcWxV21C7fd0v3bYYYRCpSSRl31AOHv7TkRIsgZHonFEm8-PQvl3rv5
   # # With Certificate
   # cert_path: "config/cert_key.pem"
-  sandbox_email_address: 
+  sandbox_email_address: Platform.sdk.seller@gmail.com
 
   # # IP Address
   # ip_address: 127.0.0.1
@@ -28,4 +28,4 @@ development:
 
 production:
   <<: *default
-  mode:
+  mode: sandbox
