@@ -30,4 +30,8 @@ class Customer < ActiveRecord::Base
       puts "Error: {e.message}"
     end
   end
+
+  def current_access_token
+    tokens.map { |token| !token.expired? }
+  end
 end
