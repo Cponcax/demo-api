@@ -6,6 +6,7 @@ class CreateReminders < ActiveRecord::Migration
       t.references :schedule, index: true
       t.string :name, limit: 80
       t.string :url_image, default: ""
+      t.datetime :start_time
 
       t.timestamps null: false
     end

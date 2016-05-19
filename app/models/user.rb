@@ -11,8 +11,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable,# :async,#:registerable,
         :recoverable, :rememberable, :trackable #, :validatable
 
-  # country
-  # belongs_to :country
+  # customers
+  has_many :customers
 
   # access tokens from doorkeeper
 
@@ -24,11 +24,6 @@ class User < ActiveRecord::Base
 
   # reminders
   has_many :reminders
-
-  #for sdk paypal
-  has_many :payment_tokens
-
-  has_many :subscriptions
 
   # receipts
   has_many :itunes_receipts, dependent: :destroy
@@ -49,7 +44,6 @@ class User < ActiveRecord::Base
   before_create :generate_code
 
   after_create :create_access_token
-
 
   before_save { self.email = email.downcase }
 

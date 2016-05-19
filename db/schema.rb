@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160602200405) do
+ActiveRecord::Schema.define(version: 20160519205840) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,9 +20,9 @@ ActiveRecord::Schema.define(version: 20160602200405) do
     t.string   "name"
     t.integer  "position"
     t.string   "streaming_url"
+    t.string   "logo_color"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
-    t.string   "logo_color"
   end
 
   create_table "countries", force: :cascade do |t|
@@ -33,6 +33,16 @@ ActiveRecord::Schema.define(version: 20160602200405) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
+
+  create_table "customers", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "email"
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "customers", ["user_id"], name: "index_customers_on_user_id", using: :btree
 
   create_table "events", force: :cascade do |t|
     t.integer  "show_id"
@@ -46,6 +56,19 @@ ActiveRecord::Schema.define(version: 20160602200405) do
 
   add_index "events", ["schedule_id"], name: "index_events_on_schedule_id", using: :btree
   add_index "events", ["show_id"], name: "index_events_on_show_id", using: :btree
+
+  create_table "invoices", force: :cascade do |t|
+    t.integer  "customer_id"
+    t.integer  "subscription_id"
+    t.string   "receipt_number"
+    t.string   "status"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "invoices", ["customer_id"], name: "index_invoices_on_customer_id", using: :btree
+  add_index "invoices", ["receipt_number"], name: "index_invoices_on_receipt_number", unique: true, using: :btree
+  add_index "invoices", ["subscription_id"], name: "index_invoices_on_subscription_id", using: :btree
 
   create_table "itunes_receipts", force: :cascade do |t|
     t.integer  "user_id"
@@ -96,17 +119,16 @@ ActiveRecord::Schema.define(version: 20160602200405) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
-  create_table "payment_tokens", force: :cascade do |t|
-    t.string   "token_type"
-    t.string   "expires_in"
-    t.string   "refresh_token"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.integer  "user_id"
-    t.string   "access_token"
+  create_table "plans", force: :cascade do |t|
+    t.integer  "ammount"
+    t.string   "currency"
+    t.string   "interval"
+    t.integer  "interval_count"
+    t.string   "name"
+    t.integer  "trial_period_days"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
-
-  add_index "payment_tokens", ["user_id"], name: "index_payment_tokens_on_user_id", using: :btree
 
   create_table "reminders", force: :cascade do |t|
     t.integer  "user_id"
@@ -114,9 +136,9 @@ ActiveRecord::Schema.define(version: 20160602200405) do
     t.integer  "schedule_id"
     t.string   "name",        limit: 80
     t.string   "url_image",              default: ""
+    t.datetime "start_time"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
-    t.datetime "start_time"
   end
 
   add_index "reminders", ["channel_id"], name: "index_reminders_on_channel_id", using: :btree
@@ -127,40 +149,54 @@ ActiveRecord::Schema.define(version: 20160602200405) do
     t.integer  "channel_id"
     t.date     "date"
     t.string   "name"
+    t.string   "turn"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string   "turn"
   end
 
   add_index "schedules", ["channel_id"], name: "index_schedules_on_channel_id", using: :btree
 
   create_table "shows", force: :cascade do |t|
     t.string   "name"
+    t.string   "rating"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string   "rating"
   end
 
   create_table "subscriptions", force: :cascade do |t|
-    t.datetime "start_date"
-    t.datetime "end_date"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.integer  "user_id"
-    t.boolean  "cancelled",      default: false
-    t.string   "transaction_id"
-    t.string   "identifier"
-    t.boolean  "payment"
-    t.boolean  "status"
+    t.integer  "plan_id"
+    t.integer  "customer_id"
+    t.datetime "canceled_at"
+    t.datetime "current_period_start"
+    t.datetime "current_period_end"
+    t.datetime "ended_at"
+    t.datetime "trial_start"
+    t.datetime "trial_end"
+    t.string   "status"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
-  add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
+  add_index "subscriptions", ["customer_id"], name: "index_subscriptions_on_customer_id", using: :btree
+  add_index "subscriptions", ["plan_id"], name: "index_subscriptions_on_plan_id", using: :btree
 
   create_table "terms", force: :cascade do |t|
     t.string   "term"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "tokens", force: :cascade do |t|
+    t.integer  "customer_id"
+    t.string   "token"
+    t.string   "refresh_token"
+    t.string   "token_type"
+    t.string   "expires_in"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "tokens", ["customer_id"], name: "index_tokens_on_customer_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "code",                   limit: 8,               null: false
@@ -182,12 +218,10 @@ ActiveRecord::Schema.define(version: 20160602200405) do
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
-    t.integer  "country_id"
     t.datetime "deleted_at"
     t.string   "status"
   end
 
-  add_index "users", ["country_id"], name: "index_users_on_country_id", using: :btree
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["first_name"], name: "index_users_on_first_name", using: :btree
@@ -196,7 +230,4 @@ ActiveRecord::Schema.define(version: 20160602200405) do
   add_index "users", ["username"], name: "index_users_on_username", using: :btree
 
   add_foreign_key "itunes_receipts", "users"
-  add_foreign_key "payment_tokens", "users"
-  add_foreign_key "subscriptions", "users"
-  add_foreign_key "users", "countries"
 end

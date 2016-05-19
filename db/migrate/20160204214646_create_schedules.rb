@@ -4,6 +4,7 @@ class CreateSchedules < ActiveRecord::Migration
       t.references :channel, index: true
       t.date :date
       t.string :name
+      t.string :turn
 
       t.timestamps null: false
     end
