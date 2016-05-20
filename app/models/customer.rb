@@ -15,23 +15,27 @@ class Customer < ActiveRecord::Base
 
 
   def exch_token authorization_code
-    begin
-      # authorization code from mobile sdk
+    # authorization code from mobile sdk
 
+    transaction do
       # exchange authorization code with refresh/access token
       logger.info "Exchange authorization code with refresh/access token"
       info  = ::FuturePayment.exch_token(authorization_code)
 
+      puts "Token info: " + info.inspect
+
       # get access_token, refresh_token from tokeninfo. refresh_token can be exchanged with access token. See https://github.com/paypal/PayPal-Ruby-SDK#openidconnect-samples
       logger.info "Successfully retrieved access_token=#{info.access_token} refresh_token=#{tokeninfo.refresh_token}"
 
-      tokens.create!(tokeninfo)      
-    rescue Exception => e
-      puts "Error: {e.message}"
+      tokens.create!(info)
     end
   end
 
-  def current_access_token
+  def get_current_access_token
     tokens.map { |token| !token.expired? }
+  end
+
+  def get_current_subscription
+    subscriptions.find_by(status: :active)
   end
 end

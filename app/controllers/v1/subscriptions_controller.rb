@@ -2,19 +2,25 @@ class V1::SubscriptionsController < V1::BaseController
   before_action -> { doorkeeper_authorize! :write }
   before_action :set_subscription, only: [:show, :edit, :update, :destroy]
 
-  #methods to payment
-  def authorize
-    # user = current_resource_owner
-    # token = user.access_tokens
-    # puts "USER" + token.inspect
-    #puts "RECUESS" + request.headers.inspect
-    puts "CODE:::: "  + params[:authorization_code]
-    @result = Subscription.getAccessToken(current_resource_owner, params[:authorization_code])
+  def status
+    @subscription = customer.get_current_subscription
 
-    if @result
-      render json: { message: "Ok" }, status: :ok
+    if @subscription
+      render json: @subscription.status_info, status: 200, root: false
     else
-      render json: { error: "Fail" }, status: :unprocessable_entity
+      render json: {}, status: 422
+    end
+  end
+
+  def authorize
+    begin
+      customer = current_resource_owner.customers.create!
+
+      if customer && customer.exch_token(params[:authorization_code])
+        render json: {}, status: 200
+      end
+    rescue Exception => e
+      render json: { error: e.message }, status: 422
     end
   end
 
@@ -43,26 +49,6 @@ class V1::SubscriptionsController < V1::BaseController
     end
   end
 
-
-  def status
-    @subscription = Subscription.status(current_resource_owner)
-
-    if @subscription.present? == false
-      puts"NO TIENES SUB::" + @subscription.inspect
-      render json: {message: "you do not have subscriptions"}, status: :unprocessable_entity
-
-    else
-      t = Date.current
-
-      dates = (@subscription.start_date.to_date..@subscription.end_date.to_date).to_a
-
-      status = dates.include? t 
-
-      puts "TIENES SUB::" + @subscription.inspect
-      render json: {cancelled: @subscription.cancelled, status: status}, status: :ok, root: false
-    end
-  end
-
   def cancel
     puts "ENTRASTE ACCION CANCEL:::"
     @cancel = Subscription.cancel(current_resource_owner)
@@ -70,18 +56,6 @@ class V1::SubscriptionsController < V1::BaseController
      puts "@CANCEL::" + @cancel.inspect
     if @cancel
       render json: {message: "Delete"}, status: :ok
-    else
-      render json: {error: "Fail"}, status: :unprocessable_entity
-    end
-  end
-
-  #method for save supcription to Iphone
-  def sync
-    @sym = Subscription.PaymentIos(current_resource_owner, params[:start_date],
-      params[:end_date], params[:transaction_id], params[:identifier], params[:cancelled])
-
-    if @sym
-      render json: {message: "OK"}, status: :ok
     else
       render json: {error: "Fail"}, status: :unprocessable_entity
     end
