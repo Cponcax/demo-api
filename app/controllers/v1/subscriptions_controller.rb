@@ -1,12 +1,10 @@
 class V1::SubscriptionsController < V1::BaseController
   before_action -> { doorkeeper_authorize! :write }
-  before_action :set_subscription, only: [:show, :edit, :update, :destroy]
+  before_action :set_subscription, only: [:status, :cancel]
 
   def status
-    @subscription = customer.get_current_subscription
-
     if @subscription
-      render json: @subscription.status_info, status: 200, root: false
+      render json: @subscription.info, status: 200, root: false
     else
       render json: {}, status: 422
     end
@@ -14,7 +12,7 @@ class V1::SubscriptionsController < V1::BaseController
 
   def authorize
     begin
-      customer = current_resource_owner.customers.create!
+      customer = current_resource_owner.customers.first_or_create
 
       if customer && customer.exch_token(params[:authorization_code])
         render json: {}, status: 200
@@ -50,20 +48,16 @@ class V1::SubscriptionsController < V1::BaseController
   end
 
   def cancel
-    puts "ENTRASTE ACCION CANCEL:::"
-    @cancel = Subscription.cancel(current_resource_owner)
-
-     puts "@CANCEL::" + @cancel.inspect
-    if @cancel
-      render json: {message: "Delete"}, status: :ok
+    if @subscription.cancel
+      render json: {}, status: 200
     else
-      render json: {error: "Fail"}, status: :unprocessable_entity
+      render json: {}, status: 422
     end
   end
 
   private
     def set_subscription
-      @subscription = Subscription.find(params[:id])
+      @subscription = current_resource_owner.get_current_subscription
     end
 
     def subscription_params

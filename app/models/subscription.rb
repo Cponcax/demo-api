@@ -1,5 +1,3 @@
-require 'tod/core_extensions'
-
 class Subscription < ActiveRecord::Base
   extend Enumerize
 
@@ -25,19 +23,42 @@ class Subscription < ActiveRecord::Base
 
   enumerize :status, in: [:active, :inactive], default: :active, scope: :having_status, predicates: true
 
-  def status_info
+  validate :could_not_revoke_access, on: :cancel
+
+  def info
     t = DateTime.current.utc
 
-    result = {}
+    if !(current_period_start < t && t < current_period_end)
+      update status: :inactive
+    end
 
-    result[:cancelled] = current_period_start < t && t < current_period_end
-    result[:status] = active?
+    return {
+      canceled: canceled?,
+      status: active?
+    }
+  end
 
-    return result
+  def cancel
+    transaction do
+      valid?(:cancel) or raise ActiveRecord::RecordInvalid.new(self)
+      update canceled_at: DateTime.current.utc
+    end
   end
 
   def makePayment metadata_id
     # metadata_id from mobile sdk
     correlation_id = metadata_id
   end
+
+    private
+
+      def canceled?
+        canceled_at.nil?
+      end
+
+      def could_not_revoke_access
+        unless customer.tokens.destroy_all
+          errors.add(:canceled_at, "an error trying to revoke access permissions has occurred.")
+        end
+      end
 end

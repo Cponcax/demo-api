@@ -34,8 +34,4 @@ class Customer < ActiveRecord::Base
   def get_current_access_token
     tokens.map { |token| !token.expired? }
   end
-
-  def get_current_subscription
-    subscriptions.find_by(status: :active)
-  end
 end
