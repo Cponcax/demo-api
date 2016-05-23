@@ -1,8 +1,16 @@
+require 'paypal-sdk-rest'
+
+include PayPal::SDK::REST::DataTypes
+include PayPal::SDK::Core::Logging
+include PayPal::SDK::OpenIDConnect
+
 class Subscription < ActiveRecord::Base
   extend Enumerize
 
   belongs_to  :plan
   belongs_to  :customer
+
+  has_many    :invoices
 
   # Initialize the payment object
   @@payment ||= {
@@ -25,15 +33,68 @@ class Subscription < ActiveRecord::Base
 
   validate :could_not_revoke_access, on: :cancel
 
+  before_create :set_start_time, :set_plan
+
+  class << self
+    def makePayment metadata_id, owner
+      puts "OWNER: " + owner.inspect
+      # metadata_id from mobile sdk
+      correlation_id = metadata_id
+
+      puts "CORRELATION ID:: " + correlation_id.inspect
+
+      customer = owner.customers.first
+
+      puts "CUSTOMER::: " + customer.inspect
+
+      # get access_token, refresh_token from tokeninfo. refresh_token can be exchanged with access token. See https://github.com/paypal/PayPal-Ruby-SDK#openidconnect-samples
+      token = customer.get_access_token
+
+      puts "TOKEN::: " + token.inspect
+
+      puts "ACCESS TOKEN IN PAYMENT IS: " + token.access_token.inspect
+      puts "REFRESH TOKEN IN PAYMENT IS: " + token.refresh_token.inspect
+
+      # Create tokeninfo by using refresh token
+      tokeninfo = Tokeninfo.refresh(token.refresh_token)
+
+      puts "NEW ACCESS TOKEN FROM REFRESH TOKEN IN PAYMENT IS: " + tokeninfo.inspect
+
+      access_token = tokeninfo.access_token
+
+      # Create Payments
+      logger.info "Create Future Payment"
+      future_payment = FuturePayment.new(@@payment.merge( :token => access_token ))
+
+      puts "FUTURE PAYMENT NEW IS: " + future_payment.inspect
+      puts "FUTURE PAYMENT NEW ERROR IS: " + future_payment.error.inspect
+      
+      success = future_payment.create(correlation_id)
+
+      if success
+        subscription = customer.subscriptions.first_or_create
+
+        puts "subscription IS:: " + subscription.inspect
+        
+        if subscription
+          logger.info "future payment successfully created"
+          subscription.invoices.create!(receipt_number: future_payment.id)
+        end
+      end
+
+      return future_payment
+    end
+  end
+
   def info
     t = DateTime.current.utc
 
-    if !(current_period_start < t && t < current_period_end)
+    if !(current_period_start < t && t < current_period_start + 30.days)
       update status: :inactive
     end
 
     return {
-      canceled: canceled?,
+      cancelled: canceled?,
       status: active?
     }
   end
@@ -45,15 +106,28 @@ class Subscription < ActiveRecord::Base
     end
   end
 
-  def makePayment metadata_id
-    # metadata_id from mobile sdk
-    correlation_id = metadata_id
+  def getPayment payment_id
+    puts "PAYMENT ID IS: " + payment_id.inspect
+    # Fetch Payment
+    payment = Payment.find(payment_id)
   end
 
     private
 
       def canceled?
         canceled_at.nil?
+      end
+
+      def set_plan
+        plan = Plan.get_basic_plan
+
+        puts "PLAN IS:: " + plan.inspect
+
+        self.plan_id = plan.id
+      end
+
+      def set_start_time
+        self.current_period_start = self.created_at
       end
 
       def could_not_revoke_access
