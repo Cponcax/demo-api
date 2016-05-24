@@ -1,10 +1,10 @@
-class CreatePlans < ActiveRecord::Migration
+class CreateBillingPlans < ActiveRecord::Migration
   def change
-    create_table :plans do |t|
-      t.integer :ammount
+    create_table :billing_plans do |t|
+      t.integer :amount
       t.string :currency
       t.string :interval
-      t.integer :interval_count
+      t.integer :interval_count, default: 1
       t.string :name
       t.integer :trial_period_days
 

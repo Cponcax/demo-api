@@ -29,7 +29,7 @@ class V1::SubscriptionsController < V1::BaseController
 
     puts "PAYMENT(FUTURE PAYMENT IS):: " + payment.inspect
 
-    if !payment.error.nil?
+    if payment.error.nil?
       render json: {}, status: 200
     else
       render json: {}, status: 400

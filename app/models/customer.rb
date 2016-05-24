@@ -11,7 +11,7 @@ class Customer < ActiveRecord::Base
   has_many    :tokens
 
   has_many    :subscriptions
-  has_many    :invoices
+  has_many    :billing_information
 
 
   def exch_token authorization_code

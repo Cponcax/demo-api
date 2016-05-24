@@ -1,7 +1,7 @@
 class CreateSubscriptions < ActiveRecord::Migration
   def change
     create_table :subscriptions do |t|
-      t.references :plan, index: true
+      t.references :billing_plan, index: true
       t.references :customer, index: true
       t.timestamp :canceled_at
       t.timestamp :current_period_start

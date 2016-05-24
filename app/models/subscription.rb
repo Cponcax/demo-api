@@ -7,10 +7,10 @@ include PayPal::SDK::OpenIDConnect
 class Subscription < ActiveRecord::Base
   extend Enumerize
 
-  belongs_to  :plan
+  belongs_to  :billing_plan
   belongs_to  :customer
 
-  has_many    :invoices
+  has_many    :billing_information
 
   # Initialize the payment object
   @@payment ||= {
@@ -29,7 +29,7 @@ class Subscription < ActiveRecord::Base
     ] 
   }
 
-  enumerize :status, in: [:active, :inactive], default: :active, scope: :having_status, predicates: true
+  enumerize :status, in: [:active, :inactive, :canceled], default: :active, scope: :having_status, predicates: true
 
   validate :could_not_revoke_access, on: :cancel
 
@@ -72,13 +72,15 @@ class Subscription < ActiveRecord::Base
       success = future_payment.create(correlation_id)
 
       if success
-        subscription = customer.subscriptions.first_or_create
+        subscription = customer.subscriptions.find_or_create_by status: :active
 
         puts "subscription IS:: " + subscription.inspect
         
         if subscription
+
+
           logger.info "future payment successfully created"
-          subscription.invoices.create!(receipt_number: future_payment.id)
+          subscription.billing_information.create!(receipt_number: future_payment.id, customer_id: customer.id)
         end
       end
 
@@ -87,10 +89,14 @@ class Subscription < ActiveRecord::Base
   end
 
   def info
-    t = DateTime.current.utc
-
-    if !(current_period_start < t && t < current_period_start + 30.days)
-      update status: :inactive
+    now = DateTime.current.utc
+    ended_at = nil
+    
+    if !(current_period_start < now && now < current_period_start + 15.minutes)
+      if canceled?
+        ended_at = now
+      end
+      update status: :inactive, ended_at: ended_at
     end
 
     return {
@@ -102,28 +108,18 @@ class Subscription < ActiveRecord::Base
   def cancel
     transaction do
       valid?(:cancel) or raise ActiveRecord::RecordInvalid.new(self)
-      update canceled_at: DateTime.current.utc
+      update canceled_at: DateTime.current.utc, status: :canceled
     end
-  end
-
-  def getPayment payment_id
-    puts "PAYMENT ID IS: " + payment_id.inspect
-    # Fetch Payment
-    payment = Payment.find(payment_id)
   end
 
     private
 
-      def canceled?
-        canceled_at.nil?
-      end
-
       def set_plan
-        plan = Plan.get_basic_plan
+        plan = BillingPlan.get_basic_plan
 
         puts "PLAN IS:: " + plan.inspect
 
-        self.plan_id = plan.id
+        self.billing_plan_id = plan.id
       end
 
       def set_start_time

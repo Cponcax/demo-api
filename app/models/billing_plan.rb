@@ -1,11 +1,11 @@
-class Plan < ActiveRecord::Base
+class BillingPlan < ActiveRecord::Base
   extend Enumerize
 
   has_many    :subscriptions
 
   # Initialize the plan object
   @@plan ||= {
-    ammount: 1500,
+    amount: 1500,
     currency: "usd",
     interval: "month",
     interval_count: 1,
