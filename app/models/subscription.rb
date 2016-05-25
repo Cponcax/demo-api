@@ -63,9 +63,6 @@ class Subscription < ActiveRecord::Base
 
       def set_plan
         plan = BillingPlan.get_basic_plan
-
-        puts "PLAN IS:: " + plan.inspect
-
         self.billing_plan_id = plan.id
       end
 
@@ -75,7 +72,7 @@ class Subscription < ActiveRecord::Base
 
       def set_access_time
         self.current_period_start = self.created_at
-        self.current_period_end = self.created_at + 5.minutes
+        self.current_period_end = self.created_at + 30.days
       end
 
       def could_not_revoke_access

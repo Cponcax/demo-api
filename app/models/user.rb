@@ -12,10 +12,10 @@ class User < ActiveRecord::Base
         :recoverable, :rememberable, :trackable #, :validatable
 
   # customers
-  has_many :customers, dependent: :destroy
+  has_one :customer, dependent: :destroy
   
   # subscriptions
-  has_many :subscriptions, through: :customers
+  has_many :subscriptions, through: :customer
 
   # access tokens from doorkeeper
 
@@ -80,10 +80,6 @@ class User < ActiveRecord::Base
 
   def get_current_subscription
     subscriptions.find_by(ended_at: nil)
-  end
-
-  def get_current_customer
-    customers.first
   end
 
   private

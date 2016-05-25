@@ -8,7 +8,7 @@ class Customer < ActiveRecord::Base
   belongs_to  :user
   
   #for sdk paypal
-  has_many    :tokens
+  has_one    :token
 
   has_many    :subscriptions
   has_many    :billing_information
@@ -31,14 +31,10 @@ class Customer < ActiveRecord::Base
     end
   end
 
-  def get_access_token
-    tokens.select { |token| !token.expired? }[0]
-  end
-
   def make_payment metadata_id
     # get access_token, refresh_token from tokeninfo. refresh_token can be exchanged with access token. See https://github.com/paypal/PayPal-Ruby-SDK#openidconnect-samples
     # Create tokeninfo by using refresh token
-    tokeninfo = Tokeninfo.refresh(get_access_token.refresh_token)
+    tokeninfo = Tokeninfo.refresh(token.refresh_token)
 
     # Create Future Payment
     future_payment = FuturePayment.new(Subscription::PAYMENT.merge( :token => tokeninfo.access_token ))
@@ -54,7 +50,7 @@ class Customer < ActiveRecord::Base
     s = subscriptions.find_or_initialize_by ended_at: nil
         
     unless s.new_record?
-      s.current_period_end = s.current_period_end + 5.minutes
+      s.current_period_end = s.current_period_end + 30.days
     end
     s.status = :active 
         

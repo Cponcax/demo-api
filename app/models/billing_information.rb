@@ -4,6 +4,6 @@ class BillingInformation < ActiveRecord::Base
 
   def get_payment_details
     # Fetch Payment
-	Payment.find(self.receipt_number)
+	  Payment.find(self.receipt_number)
   end
 end

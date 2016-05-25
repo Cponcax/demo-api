@@ -12,7 +12,11 @@ class V1::SubscriptionsController < V1::BaseController
 
   def authorize
     begin
-      customer = current_resource_owner.customers.first_or_create
+      customer = current_resource_owner.customer
+
+      if !customer
+        customer = current_resource_owner.create_customer  
+      end
 
       if customer && customer.exch_token(params[:authorization_code])
         render json: {}, status: 200
@@ -23,11 +27,7 @@ class V1::SubscriptionsController < V1::BaseController
   end
 
   def payment
-    puts "metadata_id in payment method is::: " + params[:metadata_id]
-
-    payment = current_resource_owner.get_current_customer.make_payment params[:metadata_id]
-
-    puts "PAYMENT(FUTURE PAYMENT IS):: " + payment.inspect
+    payment = current_resource_owner.customer.make_payment params[:metadata_id]
 
     if payment.error.nil?
       render json: {}, status: 200
