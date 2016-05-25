@@ -25,7 +25,7 @@ class V1::SubscriptionsController < V1::BaseController
   def payment
     puts "metadata_id in payment method is::: " + params[:metadata_id]
 
-    payment = Subscription.makePayment params[:metadata_id], current_resource_owner
+    payment = current_resource_owner.get_current_customer.make_payment params[:metadata_id]
 
     puts "PAYMENT(FUTURE PAYMENT IS):: " + payment.inspect
 

@@ -79,7 +79,11 @@ class User < ActiveRecord::Base
   end
 
   def get_current_subscription
-    subscriptions.find_by(status: :active)
+    subscriptions.find_by(ended_at: nil)
+  end
+
+  def get_current_customer
+    customers.first
   end
 
   private

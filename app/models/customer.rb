@@ -35,6 +35,34 @@ class Customer < ActiveRecord::Base
     tokens.select { |token| !token.expired? }[0]
   end
 
+  def make_payment metadata_id
+    # get access_token, refresh_token from tokeninfo. refresh_token can be exchanged with access token. See https://github.com/paypal/PayPal-Ruby-SDK#openidconnect-samples
+    # Create tokeninfo by using refresh token
+    tokeninfo = Tokeninfo.refresh(get_access_token.refresh_token)
+
+    # Create Future Payment
+    future_payment = FuturePayment.new(Subscription::PAYMENT.merge( :token => tokeninfo.access_token ))
+
+    if future_payment.create(metadata_id) # metadata_id from mobile sdk
+      renew_subscription future_payment.id
+    end
+
+    return future_payment
+  end
+
+  def renew_subscription receipt_number
+    s = subscriptions.find_or_initialize_by ended_at: nil
+        
+    unless s.new_record?
+      s.current_period_end + 30.days 
+    end
+    s.status = :active 
+        
+    if s.save!
+      s.billing_information.create!(receipt_number: receipt_number, customer_id: self.id)
+    end
+  end
+
   def get_current_subscription
     subscriptions.find_by(status: :active)
   end
