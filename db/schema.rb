@@ -16,6 +16,30 @@ ActiveRecord::Schema.define(version: 20160519205840) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "billing_informations", force: :cascade do |t|
+    t.integer  "customer_id"
+    t.integer  "subscription_id"
+    t.string   "receipt_number"
+    t.string   "status"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "billing_informations", ["customer_id"], name: "index_billing_informations_on_customer_id", using: :btree
+  add_index "billing_informations", ["receipt_number"], name: "index_billing_informations_on_receipt_number", unique: true, using: :btree
+  add_index "billing_informations", ["subscription_id"], name: "index_billing_informations_on_subscription_id", using: :btree
+
+  create_table "billing_plans", force: :cascade do |t|
+    t.integer  "amount"
+    t.string   "currency"
+    t.string   "interval"
+    t.integer  "interval_count",    default: 1
+    t.string   "name"
+    t.integer  "trial_period_days"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
   create_table "channels", force: :cascade do |t|
     t.string   "name"
     t.integer  "position"
@@ -56,19 +80,6 @@ ActiveRecord::Schema.define(version: 20160519205840) do
 
   add_index "events", ["schedule_id"], name: "index_events_on_schedule_id", using: :btree
   add_index "events", ["show_id"], name: "index_events_on_show_id", using: :btree
-
-  create_table "invoices", force: :cascade do |t|
-    t.integer  "customer_id"
-    t.integer  "subscription_id"
-    t.string   "receipt_number"
-    t.string   "status"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-  end
-
-  add_index "invoices", ["customer_id"], name: "index_invoices_on_customer_id", using: :btree
-  add_index "invoices", ["receipt_number"], name: "index_invoices_on_receipt_number", unique: true, using: :btree
-  add_index "invoices", ["subscription_id"], name: "index_invoices_on_subscription_id", using: :btree
 
   create_table "itunes_receipts", force: :cascade do |t|
     t.integer  "user_id"
@@ -119,17 +130,6 @@ ActiveRecord::Schema.define(version: 20160519205840) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
-  create_table "plans", force: :cascade do |t|
-    t.integer  "ammount"
-    t.string   "currency"
-    t.string   "interval"
-    t.integer  "interval_count"
-    t.string   "name"
-    t.integer  "trial_period_days"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-  end
-
   create_table "reminders", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "channel_id"
@@ -164,7 +164,7 @@ ActiveRecord::Schema.define(version: 20160519205840) do
   end
 
   create_table "subscriptions", force: :cascade do |t|
-    t.integer  "plan_id"
+    t.integer  "billing_plan_id"
     t.integer  "customer_id"
     t.datetime "canceled_at"
     t.datetime "current_period_start"
@@ -177,8 +177,8 @@ ActiveRecord::Schema.define(version: 20160519205840) do
     t.datetime "updated_at",           null: false
   end
 
+  add_index "subscriptions", ["billing_plan_id"], name: "index_subscriptions_on_billing_plan_id", using: :btree
   add_index "subscriptions", ["customer_id"], name: "index_subscriptions_on_customer_id", using: :btree
-  add_index "subscriptions", ["plan_id"], name: "index_subscriptions_on_plan_id", using: :btree
 
   create_table "terms", force: :cascade do |t|
     t.string   "term"
@@ -188,10 +188,10 @@ ActiveRecord::Schema.define(version: 20160519205840) do
 
   create_table "tokens", force: :cascade do |t|
     t.integer  "customer_id"
-    t.string   "token"
+    t.string   "access_token"
     t.string   "refresh_token"
     t.string   "token_type"
-    t.string   "expires_in"
+    t.integer  "expires_in"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
   end
