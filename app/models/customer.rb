@@ -27,7 +27,7 @@ class Customer < ActiveRecord::Base
       # get access_token, refresh_token from tokeninfo. refresh_token can be exchanged with access token. See https://github.com/paypal/PayPal-Ruby-SDK#openidconnect-samples
       logger.info "Successfully retrieved access_token=#{info.access_token} refresh_token=#{info.refresh_token}"
 
-      tokens.create!(access_token: info.access_token, refresh_token: info.refresh_token, token_type: info.token_type, expires_in: info.expires_in)
+      create_token!(access_token: info.access_token, refresh_token: info.refresh_token, token_type: info.token_type, expires_in: info.expires_in)
     end
   end
 
