@@ -76,7 +76,7 @@ class Subscription < ActiveRecord::Base
       end
 
       def could_not_revoke_access
-        unless customer.tokens.destroy_all
+        unless customer.token.destroy
           errors.add(:canceled_at, "an error trying to revoke access permissions has occurred.")
         end
       end
