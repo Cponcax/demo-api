@@ -14,7 +14,7 @@ class Subscription < ActiveRecord::Base
 
   # Initialize the payment object
   PAYMENT ||= {
-    "intent" =>  "sale",
+    "intent" =>  "authorize",
     "payer" =>  {
       "payment_method" =>  "paypal" 
     },
@@ -27,6 +27,14 @@ class Subscription < ActiveRecord::Base
       "description" =>  "This is the payment transaction description." 
       } 
     ] 
+  }
+
+  CAPTURE ||= {
+    "amount" => {
+      "currency" => "USD",
+      "total" => "15.00" 
+    },
+    "is_final_capture" => true 
   }
 
   enumerize :status, in: [:active, :inactive], default: :active, scope: :having_status, predicates: true
