@@ -44,9 +44,9 @@ ActiveRecord::Schema.define(version: 20160519205840) do
     t.string   "name"
     t.integer  "position"
     t.string   "streaming_url"
-    t.string   "logo_color"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.string   "logo_color"
   end
 
   create_table "countries", force: :cascade do |t|
@@ -62,8 +62,10 @@ ActiveRecord::Schema.define(version: 20160519205840) do
     t.integer  "user_id"
     t.string   "email"
     t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.string   "original_transaction_id"
+    t.boolean  "is_itunes",               default: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
   end
 
   add_index "customers", ["user_id"], name: "index_customers_on_user_id", using: :btree
@@ -130,15 +132,27 @@ ActiveRecord::Schema.define(version: 20160519205840) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
+  create_table "payment_tokens", force: :cascade do |t|
+    t.string   "token_type"
+    t.string   "expires_in"
+    t.string   "refresh_token"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "user_id"
+    t.string   "access_token"
+  end
+
+  add_index "payment_tokens", ["user_id"], name: "index_payment_tokens_on_user_id", using: :btree
+
   create_table "reminders", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "channel_id"
     t.integer  "schedule_id"
     t.string   "name",        limit: 80
     t.string   "url_image",              default: ""
-    t.datetime "start_time"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.datetime "start_time"
   end
 
   add_index "reminders", ["channel_id"], name: "index_reminders_on_channel_id", using: :btree
@@ -149,18 +163,18 @@ ActiveRecord::Schema.define(version: 20160519205840) do
     t.integer  "channel_id"
     t.date     "date"
     t.string   "name"
-    t.string   "turn"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "turn"
   end
 
   add_index "schedules", ["channel_id"], name: "index_schedules_on_channel_id", using: :btree
 
   create_table "shows", force: :cascade do |t|
     t.string   "name"
-    t.string   "rating"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "rating"
   end
 
   create_table "subscriptions", force: :cascade do |t|
@@ -218,10 +232,12 @@ ActiveRecord::Schema.define(version: 20160519205840) do
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
+    t.integer  "country_id"
     t.datetime "deleted_at"
     t.string   "status"
   end
 
+  add_index "users", ["country_id"], name: "index_users_on_country_id", using: :btree
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["first_name"], name: "index_users_on_first_name", using: :btree
@@ -230,4 +246,6 @@ ActiveRecord::Schema.define(version: 20160519205840) do
   add_index "users", ["username"], name: "index_users_on_username", using: :btree
 
   add_foreign_key "itunes_receipts", "users"
+  add_foreign_key "payment_tokens", "users"
+  add_foreign_key "users", "countries"
 end
