@@ -11,10 +11,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160602200405) do
+ActiveRecord::Schema.define(version: 20160519205840) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "billing_informations", force: :cascade do |t|
+    t.integer  "customer_id"
+    t.integer  "subscription_id"
+    t.string   "receipt_number"
+    t.string   "status"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "billing_informations", ["customer_id"], name: "index_billing_informations_on_customer_id", using: :btree
+  add_index "billing_informations", ["receipt_number"], name: "index_billing_informations_on_receipt_number", unique: true, using: :btree
+  add_index "billing_informations", ["subscription_id"], name: "index_billing_informations_on_subscription_id", using: :btree
+
+  create_table "billing_plans", force: :cascade do |t|
+    t.integer  "amount"
+    t.string   "currency"
+    t.string   "interval"
+    t.integer  "interval_count",    default: 1
+    t.string   "name"
+    t.integer  "trial_period_days"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
 
   create_table "channels", force: :cascade do |t|
     t.string   "name"
@@ -33,6 +57,18 @@ ActiveRecord::Schema.define(version: 20160602200405) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
+
+  create_table "customers", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "email"
+    t.text     "description"
+    t.string   "original_transaction_id"
+    t.boolean  "is_itunes",               default: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+  end
+
+  add_index "customers", ["user_id"], name: "index_customers_on_user_id", using: :btree
 
   create_table "events", force: :cascade do |t|
     t.integer  "show_id"
@@ -142,25 +178,39 @@ ActiveRecord::Schema.define(version: 20160602200405) do
   end
 
   create_table "subscriptions", force: :cascade do |t|
-    t.datetime "start_date"
-    t.datetime "end_date"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.integer  "user_id"
-    t.boolean  "cancelled",      default: false
-    t.string   "transaction_id"
-    t.string   "identifier"
-    t.boolean  "payment"
-    t.boolean  "status"
+    t.integer  "billing_plan_id"
+    t.integer  "customer_id"
+    t.datetime "canceled_at"
+    t.datetime "current_period_start"
+    t.datetime "current_period_end"
+    t.datetime "ended_at"
+    t.datetime "trial_start"
+    t.datetime "trial_end"
+    t.string   "status"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
-  add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
+  add_index "subscriptions", ["billing_plan_id"], name: "index_subscriptions_on_billing_plan_id", using: :btree
+  add_index "subscriptions", ["customer_id"], name: "index_subscriptions_on_customer_id", using: :btree
 
   create_table "terms", force: :cascade do |t|
     t.string   "term"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "tokens", force: :cascade do |t|
+    t.integer  "customer_id"
+    t.string   "access_token"
+    t.string   "refresh_token"
+    t.string   "token_type"
+    t.integer  "expires_in"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "tokens", ["customer_id"], name: "index_tokens_on_customer_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "code",                   limit: 8,               null: false
@@ -197,6 +247,5 @@ ActiveRecord::Schema.define(version: 20160602200405) do
 
   add_foreign_key "itunes_receipts", "users"
   add_foreign_key "payment_tokens", "users"
-  add_foreign_key "subscriptions", "users"
   add_foreign_key "users", "countries"
 end
