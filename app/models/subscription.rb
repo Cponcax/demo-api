@@ -21,7 +21,7 @@ class Subscription < ActiveRecord::Base
     "transactions" => [ 
       {
         "amount" => {
-          "total" =>  "15.00",
+          "total" =>  "1.00",
           "currency" =>  "USD" 
         },
       "description" =>  "This is the payment transaction description." 
@@ -32,7 +32,7 @@ class Subscription < ActiveRecord::Base
   CAPTURE ||= {
     "amount" => {
       "currency" => "USD",
-      "total" => "15.00" 
+      "total" => "1.00" 
     },
     "is_final_capture" => true 
   }
@@ -80,7 +80,7 @@ class Subscription < ActiveRecord::Base
 
       def set_access_time
         self.current_period_start = self.created_at
-        self.current_period_end = self.created_at + 30.days
+        self.current_period_end = self.created_at + 30.minutes
       end
 
       def could_not_revoke_access

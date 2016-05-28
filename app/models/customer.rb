@@ -48,7 +48,7 @@ class Customer < ActiveRecord::Base
           s = subscriptions.find_or_initialize_by ended_at: nil
 
           unless s.new_record?
-            s.current_period_end = s.current_period_end + 30.days
+            s.current_period_end = s.current_period_end + 30.minutes
           end
           s.status = :active 
               
