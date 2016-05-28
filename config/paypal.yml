@@ -9,14 +9,14 @@ test: &default
   # Mode can be 'live' or 'sandbox'
   mode: sandbox
 
-  # Credentials for Classic APIs
-  app_id: APP-80W284485P519543T
-  username: raphael-merchant_api1.yopmail.com #play-facilitator_api1.503estudio.com 
-  password: DSG6J3PTJWT7DZRE
-  signature: AFcWxV21C7fd0v3bYYYRCpSSRl31A5TPSI8qGZk7blHforpDc5YFk837
-  # # With Certificate
-  # cert_path: "config/cert_key.pem"
-  sandbox_email_address: Platform.sdk.seller@gmail.com
+  # # Credentials for Classic APIs
+  # app_id: APP-80W284485P519543T
+  # username: raphael-merchant_api1.yopmail.com #play-facilitator_api1.503estudio.com 
+  # password: DSG6J3PTJWT7DZRE
+  # signature: AFcWxV21C7fd0v3bYYYRCpSSRl31A5TPSI8qGZk7blHforpDc5YFk837
+  # # # With Certificate
+  # # cert_path: "config/cert_key.pem"
+  # sandbox_email_address: Platform.sdk.seller@gmail.com
 
   # # IP Address
   # ip_address: 127.0.0.1
