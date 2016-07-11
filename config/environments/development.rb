@@ -47,15 +47,7 @@ Rails.application.configure do
 
   config.action_mailer.default :charset => "utf-8"
 
-  config.action_mailer.smtp_settings = {
-    address: "smtp.mandrillapp.com",
-    port: 587,
-    domain: "lvh.me",
-    authentication: :login,
-    enable_starttls_auto: true,
-    user_name: ENV.fetch('mandrill_user'),
-    password: ENV.fetch('mandrill_api_key')
-  }
+ 
 
 
 
